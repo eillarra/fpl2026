@@ -11,7 +11,9 @@ import { useEventStore } from '@evan/stores/event';
 import { notify } from '@/utils/notify';
 
 Loading.show({
-  delay: 250,
+  delay: 0,
+  backgroundColor: '#0000ff',
+  spinnerSize: 150,
 });
 
 const eventStore = useEventStore();

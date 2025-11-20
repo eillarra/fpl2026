@@ -1,53 +1,12 @@
 <template>
   <q-layout v-show="_loaded" view="hHh lpr lfr" class="fpl__layout">
-    <q-header class="fpl__header bg-white text-dark">
+    <q-header v-if="$q.screen.lt.md" class="fpl__header bg-white text-dark">
       <q-toolbar class="fpl__toolbar container">
         <router-link :to="{ name: 'home' }">
-          <img src="~assets/fpl-logo.svg" class="fpl__logo" :class="{ 'a-lg': $q.screen.gt.md }" />
+          <img src="~assets/fpl-logo.svg" class="fpl__logo" />
         </router-link>
         <q-space />
-        <q-btn-group square flat v-if="$q.screen.gt.sm" class="q-ml-xl">
-          <template v-for="(item, idx) in menu" :key="idx">
-            <q-btn v-if="!item.children" no-caps :to="{ name: item.route }" size="lg">
-              <span
-                >{{ item.label
-                }}<q-chip v-if="item.closed" color="grey-4" size="sm" class="q-ml-sm q-mb-xs text-dark"
-                  >CLOSED</q-chip
-                ></span
-              >
-            </q-btn>
-            <q-btn v-else no-caps size="lg" :menu="true" :items="item.children">
-              <span
-                >{{ item.label
-                }}<q-chip v-if="item.closed" color="grey-4" size="sm" class="q-ml-sm q-mb-xs text-dark"
-                  >CLOSED</q-chip
-                ></span
-              >
-              <q-menu class="fpl__bg-yellow">
-                <q-list style="min-width: 150px">
-                  <q-item
-                    v-for="(child, idx) in item.children"
-                    :key="idx"
-                    no-caps
-                    :to="{ name: child.route }"
-                    exact
-                    active-class="text-weight-bold"
-                  >
-                    <q-item-section>{{ child.label }}</q-item-section>
-                  </q-item>
-                </q-list>
-              </q-menu>
-            </q-btn>
-          </template>
-        </q-btn-group>
-        <q-space />
-        <fpl-btn
-          :icon="iconProgram"
-          label="Program"
-          type="router-link"
-          :to="{ name: 'program' }"
-          class="q-ml-xl"
-        />
+        <fpl-btn :icon="iconProgram" label="Program" type="router-link" :to="{ name: 'program' }" class="q-ml-xl" />
         <!-- PWA Install Button -->
         <q-btn
           v-if="pwaInstall.isInstallable.value"
@@ -62,80 +21,59 @@
           outline
           round
           v-show="$q.screen.lt.md"
-          @click="rightDrawer = !rightDrawer"
+          @click="leftDrawer = !leftDrawer"
           :icon="iconMenu"
           aria-label="Open navigation menu"
-          :aria-expanded="rightDrawer"
+          :aria-expanded="leftDrawer"
           class="q-mx-sm"
         />
       </q-toolbar>
       <q-separator />
     </q-header>
 
-    <q-drawer v-if="!$q.screen.gt.md" v-model="rightDrawer" :width="280" side="right" class="fpl__drawer">
+    <!-- Left drawer for mobile only -->
+    <q-drawer v-model="leftDrawer" :width="280" side="left" class="fpl__drawer" overlay :breakpoint="960">
       <q-toolbar class="fpl__toolbar">
         <div class="q-pl-sm q-pt-sm"><img src="~assets/fpl-logo.svg" class="fpl__logo-footer q-ml-xs" /></div>
-        <q-space v-if="$q.screen.lt.md" />
+        <q-space />
         <q-btn
           outline
           round
-          v-show="$q.screen.lt.md"
-          @click="rightDrawer = !rightDrawer"
+          @click="leftDrawer = !leftDrawer"
           :icon="iconClose"
           aria-label="Close navigation menu"
           class="q-mr-sm"
         />
       </q-toolbar>
       <div class="q-pa-lg">
-        <q-list dense>
-          <template v-for="(item, idx) in menu" :key="idx">
-            <q-item v-if="!item.children" no-caps :to="{ name: item.route }" exact active-class="text-weight-bold">
-              <q-item-section avatar>
-                <q-icon :name="item.icon" />
-              </q-item-section>
-              <q-item-section
-                >{{ item.label
-                }}<q-chip v-if="item.closed" color="grey-4" size="sm" class="q-ml-sm q-mb-xs text-dark"
-                  >CLOSED</q-chip
-                ></q-item-section
-              >
-            </q-item>
-            <q-item v-else no-caps>
-              <q-item-section avatar top>
-                <q-icon :name="item.icon" class="q-mt-xs" />
-              </q-item-section>
-              <q-item-section>
-                <span
-                  >{{ item.label
-                  }}<q-chip v-if="item.closed" color="grey-4" size="sm" class="q-ml-sm q-mb-xs text-dark"
-                    >CLOSED</q-chip
-                  ></span
-                >
-                <ul class="q-pl-none fpl__router-link-menu">
-                  <li v-for="(child, idx) in item.children" :key="idx">
-                    <router-link :to="{ name: child.route }" class="inherit">{{ child.label }}</router-link>
-                  </li>
-                </ul></q-item-section
-              >
-            </q-item>
-          </template>
-        </q-list>
-        <q-separator class="q-mt-lg q-mb-xl" />
-        <div class="fpl__router-link-menu flex column text-right">
-          <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item.route }">{{
-            item.label
-          }}</router-link>
-        </div>
+        <sidebar-menu :menu="menu" :submenu="submenu" show-logo @item-click="leftDrawer = false" />
       </div>
     </q-drawer>
 
-    <q-page-container class="bg-white">
+    <q-page-container :class="$q.screen.gt.sm ? 'fpl__bg-color q-pt-lg' : 'bg-white'">
       <q-page>
-        <router-view />
-        <div class="bg-grey-3 text-grey-9 q-py-xl">
+        <div class="container" :class="{ 'fpl__desktop-layout': $q.screen.gt.sm }">
+          <div class="row q-pb-xl" :class="{ 'q-col-gutter-x-xl': $q.screen.gt.sm }">
+            <!-- Left sidebar for desktop -->
+            <div v-if="$q.screen.gt.sm" class="col-3 fpl__sidebar-fixed">
+              <div class="q-pa-lg bg-fpl-cyan">
+                <sidebar-menu :menu="menu" :submenu="submenu" show-logo />
+              </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col bg-white q-py-xl">
+              <div :class="$q.screen.gt.sm ? 'q-pr-xl' : ''">
+                <router-view />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fpl__bg-color text-white q-pt-lg q-pb-xl">
           <div class="container">
-            <div class="row q-col-gutter-x-md q-col-gutter-y-lg justify-between">
-              <div class="col-12 col-sm-12 col-md-4">
+            <div class="row q-col-gutter-xl justify-between">
+              <div class="col-12 col-sm-12 col-md offset-md-3">
                 <div class="q-gutter-x-lg flex items-center">
                   <router-link :to="{ name: 'home' }" class="q-pt-xs">
                     <img src="~assets/fpl-logo.svg" class="fpl__logo-footer" />
@@ -147,51 +85,29 @@
                     title="EasyChair"
                     aria-label="EasyChair"
                   >
-                    <q-icon :name="iconEasyChair" size="sm" />
+                    <q-icon :name="iconEasyChair" size="sm" color="fpl-green" />
                   </a>
                 </div>
-                <p class="text-body1 fpl__text-red q-mt-lg">{{ footerText }}</p>
-              </div>
-              <div class="col-12 col-sm-6 col-md-4 offset-md-1">
-                <div class="fpl__router-link-menu flex column">
-                  <template v-for="(item, idx) in menu" :key="idx">
-                    <router-link v-if="!item.children" :to="{ name: item.route }">{{ item.label }}</router-link>
-                    <div v-else>
-                      <span class="text-grey-7">{{ item.label }}</span>
-                      <ul class="q-pl-lg">
-                        <li v-for="(child, idx) in item.children" :key="idx">
-                          <router-link :to="{ name: child.route }">{{ child.label }}</router-link>
-                        </li>
-                      </ul>
-                    </div>
-                  </template>
-                </div>
-              </div>
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="fpl__router-link-menu flex column">
-                  <a href="https://fpl.org/prior-editions" target="_blank" rel="noopener noreferrer">Prior editions</a>
-                  <router-link v-for="(item, idx) in submenu" :key="idx" :to="{ name: item.route }">{{
-                    item.label
-                  }}</router-link>
-                </div>
-              </div>
-            </div>
-            <div class="row q-col-gutter-x-md q-pt-xl">
-              <div class="col-12 col-md-4 text-caption">
-                <p class="q-mb-sm">
-                  <strong><span class="text-helvetica">&copy;</span> 2025 Ghent University</strong>
+                <p class="text-body1 q-mt-lg">{{ footerText }}</p>
+                <p class="text-caption">
+                  <strong>&copy; 2025 Ghent University</strong><br />
+                  <span
+                    >The images on this web site are reproduced with the permission of the copyright owner,
+                    <a href="https://stad.gent/en" target="_blank" rel="noopener noreferrer">Stad Gent</a>.</span
+                  >
                 </p>
-                <span
-                  >The images on this web site are reproduced with the permission of the copyright owner,
-                  <a href="https://stad.gent/en" target="_blank" rel="noopener noreferrer">Stad Gent</a>.</span
-                >
               </div>
-              <div class="col-12 col-md-6 offset-md-1" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
-                <div class="row q-col-gutter-md fpl__footer-organizers text-caption q-mb-xl">
+              <div class="col-12 col-md-4 offset-md-1" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
+                <span class="text-caption">Organised by</span>
+                <div class="row q-col-gutter-md fpl__footer-organizers q-my-md">
                   <div class="col">
-                    Organised by<br />
                     <a href="https://www.ugent.be/en" target="_blank" rel="noopener noreferrer">
-                      <ugent-logo color="#555" class="q-mt-md" />
+                      <ugent-logo color="#0f0" />
+                    </a>
+                  </div>
+                  <div class="col">
+                    <a href="https://fpl.org/" target="_blank" rel="noopener noreferrer">
+                      <fpl-logo color="#0f0" />
                     </a>
                   </div>
                 </div>
@@ -212,6 +128,8 @@ import { usePWAInstall } from '@evan/composables/usePWAInstall';
 import { useEventStore } from '@evan/stores/event';
 import { dateRange } from '@evan/utils/dates';
 
+import FplLogo from '@/components/logos/FplLogo.vue';
+import SidebarMenu from '@/components/SidebarMenu.vue';
 import UgentLogo from '@/components/logos/UgentLogo.vue';
 
 import {
@@ -219,6 +137,7 @@ import {
   iconClose,
   iconCommittees,
   iconEasyChair,
+  iconHome,
   iconMenu,
   iconProgram,
   iconRegister,
@@ -239,37 +158,35 @@ const pwaInstall = usePWAInstall();
 
 const { _loaded, event, contentsDict } = storeToRefs(eventStore);
 
-const rightDrawer = ref<boolean>(false);
+const leftDrawer = ref<boolean>(false);
 const menu: MenuItem[] = [
-  { route: 'program', label: 'Program', icon: iconProgram },
-  { route: 'venue', label: 'Venue and location', icon: iconVenue },
-  { route: 'accommodation', label: 'Accommodation', icon: iconAccommodation },
-  {
-    route: 'committees',
-    label: 'Committees',
-    icon: iconCommittees,
-    children: [
-      { route: 'committees', label: 'Organizing Committees & Chairs' },
-      { route: 'programCommittee', label: 'Program Committee' },
-    ],
-  },
+  { route: 'home', label: 'Home', icon: iconHome },
   {
     route: 'callForPapers',
     label: 'Calls',
     icon: iconSend,
     children: [
-      { route: 'callForWorkshopPapers', label: 'Call for Workshop Papers' },
       { route: 'callForPapers', label: 'Call for Papers' },
-      { route: 'callForEUWorkshops', label: 'Call for EU Workshops' },
-      { route: 'callForWorkshops', label: 'Call for Workshops' },
+      { route: 'callForWorkshops', label: 'Call for Workshops & Tutorials' },
     ],
-    closed: true,
   },
+  // { route: 'program', label: 'Program', icon: iconProgram },
+  {
+    route: 'organizingCommittee',
+    label: 'Committees',
+    icon: iconCommittees,
+    children: [
+      { route: 'organizingCommittee', label: 'Organizing Committee' },
+      { route: 'programCommittee', label: 'Program Committee' },
+      { route: 'steeringCommittee', label: 'Steering Committee' },
+    ],
+  },
+  { route: 'venue', label: 'Venue and location', icon: iconVenue },
+  { route: 'accommodation', label: 'Accommodation', icon: iconAccommodation },
 ];
 const submenu: MenuItem[] = [
   { route: 'registration', label: 'Registration', icon: iconRegister },
   { route: 'contact', label: 'Contact' },
-  { route: 'codeOfConduct', label: 'Code of Conduct' },
   { route: 'privacyPolicy', label: 'Privacy Policy' },
   { route: 'disclaimer', label: 'Disclaimer' },
 ];
@@ -280,5 +197,7 @@ const footerText = computed<string>(() => {
   return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
 });
 
-const submissionsUrl = computed<Url | null>(() => (contentsDict.value['call_for_papers.url']?.value as string) || null);
+const submissionsUrl = computed<Url | null>(
+  () => (contentsDict.value['calls.call_for_papers.url']?.value as string) || null,
+);
 </script>

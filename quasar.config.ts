@@ -96,12 +96,12 @@ export default configure((/* ctx */) => {
 
     // https://quasar.dev/quasar-cli-vite/quasar-config-js#framework
     framework: {
-      iconSet: 'svg-ionicons-v6', // Quasar icon set
+      iconSet: 'material-symbols-sharp', // Quasar icon set
       plugins: ['Dialog', 'Loading', 'LoadingBar', 'LocalStorage', 'Meta', 'Notify'],
       config: {
         loadingBar: {
-          color: '#1e64c8',
-          size: '2px',
+          color: 'fpl-green',
+          size: '3px',
           position: 'top',
           hijackFilter(url: string) {
             return /^https:\/\/evan\.ugent\.be/.test(url);

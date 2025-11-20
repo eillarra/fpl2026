@@ -1,0 +1,10 @@
+RewriteEngine On
+
+RewriteCond %{HTTPS} on
+RewriteCond %{REQUEST_URI} ^/fpl2026/?(.*)$
+RewriteRule ^(.*)$ https://2026.fpl.org/$1 [R=301,L]
+
+# Handle Vue Router history mode - serve index.html for all non-file requests
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ /index.html [L]

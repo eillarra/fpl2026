@@ -25,6 +25,9 @@ jobs:
       - name: Build app
         run: yarn build
 
+      - name: Copy .htaccess to dist
+        run: cp deploy/.htaccess dist/pwa/.htaccess
+
       - name: Checkout target repository
         uses: actions/checkout@v4
         with:
@@ -34,10 +37,8 @@ jobs:
 
       - name: Copy built files to target repository
         run: |
-          cp target-repo/web/2026/.htaccess /tmp/.htaccess.backup
           rm -rf target-repo/web/2026/*
           cp -r dist/pwa/* target-repo/web/2026/
-          cp /tmp/.htaccess.backup target-repo/web/2026/.htaccess
 
       - name: Commit and push to target repository
         run: |

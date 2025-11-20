@@ -4,7 +4,7 @@
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
         <div class="col-12 col-md-4 flex column" v-show="$q.screen.gt.xs">
           <fpl-separator label="Workshops" />
-          <h6 class="fpl__text-red">
+          <h6>
             All workshop sessions at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
             >.
           </h6>

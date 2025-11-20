@@ -1,22 +1,12 @@
 <template>
-  <div class="q-my-xl q-pb-xl">
-    <div class="container">
-      <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-4 flex column">
-          <h2 class="fpl__text-title">Privacy policy for this website and related services</h2>
-          <q-separator />
-          <h6 class="fpl__text-red">
-            Ghent University, Technologiepark 126, 9052 Gent, Belgium, is the data controller (“we” or “us”) for this
-            website. This notice describes how we process your personal data on this website and our related services
-            such as event registration.
-          </h6>
-        </div>
-        <div class="col-12 col-md-7">
-          <marked-div v-if="privacyPolicyText" :text="privacyPolicyText" />
-        </div>
-      </div>
-    </div>
-  </div>
+  <h2 class="fpl__text-title">Privacy policy for this website and related services</h2>
+  <q-separator />
+  <h6 class="q-mt-xl">
+    Ghent University, Technologiepark 126, 9052 Gent, Belgium, is the data controller (“we” or “us”) for this website.
+    This notice describes how we process your personal data on this website and our related services such as event
+    registration.
+  </h6>
+  <marked-div v-if="privacyPolicyText" :text="privacyPolicyText" />
 </template>
 
 <script setup lang="ts">

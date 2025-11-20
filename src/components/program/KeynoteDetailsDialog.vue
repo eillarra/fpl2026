@@ -16,7 +16,7 @@
     <fpl-dialog v-model="dialogOpen">
       <fpl-dialog-content title="Keynote details" hide-drawer compact>
         <template #tabs>
-          <h6 class="q-mt-none q-mb-md fpl__text-red text-wrap-balance">{{ keynote.title }}</h6>
+          <h6 class="q-mt-none q-mb-md text-wrap-balance">{{ keynote.title }}</h6>
         </template>
         <template #page>
           <div class="q-px-lg q-pb-xl">
@@ -57,8 +57,20 @@
             <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
               <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
               <div v-if="!hideFavoriteBtn" class="float-right q-ml-lg">
-                <favorite-btn v-if="subsessionDisplay" type="subsession" :id="keynote.subsession" :hide-label="!$q.screen.gt.sm" size="lg" />
-                <favorite-btn v-else-if="sessionDisplay" type="session" :id="keynote.session" :hide-label="!$q.screen.gt.sm" size="lg" />
+                <favorite-btn
+                  v-if="subsessionDisplay"
+                  type="subsession"
+                  :id="keynote.subsession"
+                  :hide-label="!$q.screen.gt.sm"
+                  size="lg"
+                />
+                <favorite-btn
+                  v-else-if="sessionDisplay"
+                  type="session"
+                  :id="keynote.session"
+                  :hide-label="!$q.screen.gt.sm"
+                  size="lg"
+                />
               </div>
               <div v-if="subsessionDisplay">
                 <strong>Session:</strong> {{ subsessionDisplay.title }}<br />

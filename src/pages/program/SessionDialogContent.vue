@@ -18,7 +18,7 @@
                 {{ formatProgramTime(session.start_at) }} - {{ formatProgramTime(session.end_at) }}
               </q-chip>
             </div>
-            <strong class="fpl__text-red">Room: {{ getRoomName(eventStore.rooms, session.room) }}</strong>
+            <strong>Room: {{ getRoomName(eventStore.rooms, session.room) }}</strong>
           </div>
           <div v-if="sessionType !== 'catering'" class="col-auto">
             <favorite-btn type="session" :id="session.id" :hide-label="!$q.screen.gt.sm" size="lg" class="q-ml-md" />
@@ -156,7 +156,7 @@
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <h6 class="q-mt-none fpl__text-red">{{ session.title }}.</h6>
+              <h6 class="q-mt-none">{{ session.title }}.</h6>
               <marked-div :text="session.description" />
             </div>
           </div>

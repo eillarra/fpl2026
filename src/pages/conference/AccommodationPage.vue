@@ -1,35 +1,21 @@
 <template>
-  <div class="q-mt-xl">
-    <div class="container">
-      <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-4 flex column">
-          <h2 class="fpl__text-title">Accommodation</h2>
-          <q-separator />
-        </div>
-        <div class="col-12 col-md-7">
-          <marked-div :text="accommodationText" class="q-mb-lg" />
-        </div>
-      </div>
-      <div v-if="gmapsEmbedUrl" class="q-my-xl">
-        <q-video :src="gmapsEmbedUrl" :ratio="$q.screen.gt.sm ? 2 : 1" />
-      </div>
+  <h2 class="fpl__text-title">Accommodation</h2>
+  <q-separator class="q-mb-xl" />
+  <div class="row q-col-gutter-xl q-mt-none">
+    <div class="col-12 col-md-5">
+      <marked-div :text="accommodationText" />
     </div>
-    <div v-if="aboutGhentText" class="fpl__bg-yellow q-mt-xl">
-      <q-separator class="q-ma-none" />
-      <div class="container q-py-xl">
-        <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between" :class="{ 'q-py-xl': $q.screen.gt.sm }">
-          <div class="col-12 col-md-4">
-            <h3 class="fpl__text-title">About Ghent</h3>
-            <q-separator />
-            <marked-div v-if="aboutGhentIntroText" :text="aboutGhentIntroText" class="fpl__text-red q-mt-xl" />
-          </div>
-          <div class="col-12 col-md-7">
-            <marked-div :text="aboutGhentText" />
-          </div>
-        </div>
-      </div>
+    <div v-if="gmapsEmbedUrl" class="col-12 col-md">
+      <q-video :src="gmapsEmbedUrl" :ratio="$q.screen.gt.sm ? 1.6 : 1" />
     </div>
   </div>
+  <template v-if="aboutGhentText">
+    <q-separator class="q-my-xl" />
+    <div>
+      <h4 class="fpl__text-subtitle2">About Ghent</h4>
+      <marked-div :text="aboutGhentText" />
+    </div>
+  </template>
 </template>
 
 <script setup lang="ts">
@@ -46,9 +32,7 @@ const { contentsDict } = storeToRefs(eventStore);
 const accommodationText = computed<MarkdownText | null>(
   () => (contentsDict.value['accommodation']?.value as MarkdownText) || null,
 );
-const aboutGhentIntroText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.intro']?.value as MarkdownText) || null,
-);
+
 const aboutGhentText = computed<MarkdownText | null>(
   () => (contentsDict.value['ghent.about']?.value as MarkdownText) || null,
 );

@@ -1,6 +1,6 @@
 <template>
   <div class="q-pb-xl">
-    <div class="fpl__bg-yellow q-py-xl q-mb-lg" v-show="$q.screen.gt.sm">
+    <div class="fpl__bg-green q-py-xl q-mb-lg" v-show="$q.screen.gt.sm">
       <div class="container">
         <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between items-center">
           <div class="col-12 col-md-4 flex column">
@@ -54,7 +54,7 @@
         @day-select="selectDay"
         class="q-pb-sm justify-center q-mt-xs q-mb-sm"
       />
-      <q-tabs dense no-caps class="bg-fpl-yellow text-fpl-red" indicator-color="transparent">
+      <q-tabs dense no-caps class="bg-fpl-green text-fpl-red" indicator-color="transparent">
         <q-tab
           v-for="item in navigationItems"
           :key="item.route"

@@ -1,7 +1,7 @@
 <template>
-  <h2 class="fpl__text-title">Disclaimer</h2>
+  <h2 class="fpl__text-title">Call for Workshops & Tutorials</h2>
   <q-separator />
-  <marked-div v-if="legalNoticeText" :text="legalNoticeText" class="q-mt-xl" />
+  <marked-div v-if="callText" :text="callText" class="q-mt-xl" />
 </template>
 
 <script setup lang="ts">
@@ -15,13 +15,13 @@ const eventStore = useEventStore();
 
 const { contentsDict } = storeToRefs(eventStore);
 
-const legalNoticeText = computed<MarkdownText | null>(
-  () => (contentsDict.value['disclaimer']?.value as MarkdownText) || null,
+const callText = computed<MarkdownText | null>(
+  () => (contentsDict.value['calls.call_for_workshops']?.value as MarkdownText) || null,
 );
 
 useMeta(() => {
   return {
-    title: 'Disclaimer',
+    title: 'Call for Workshops & Tutorials',
   };
 });
 </script>

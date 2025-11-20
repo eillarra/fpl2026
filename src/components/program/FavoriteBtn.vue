@@ -6,7 +6,7 @@
     :size="size == 'lg' ? undefined : 'md'"
     outline
     class="q-ml-lg"
-    :class="{ 'fpl__bg-yellow': isFavorited }"
+    :class="{ 'fpl__bg-green': isFavorited }"
     @click="toggleFavorite"
   />
 </template>

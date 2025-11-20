@@ -8,10 +8,7 @@
   "scope": "/",
   "background_color": "#fce275",
   "theme_color": "#1e64c8",
-  "categories": [
-    "education",
-    "productivity"
-  ],
+  "categories": ["events", "education", "technology", "conferences"],
   "lang": "en",
   "icons": [
     {

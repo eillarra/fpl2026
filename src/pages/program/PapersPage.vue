@@ -4,7 +4,7 @@
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
         <div class="col-12 col-md-4 flex column" v-show="$q.screen.gt.xs">
           <fpl-separator label="Accepted Papers" />
-          <h6 class="fpl__text-red">
+          <h6>
             All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
             >: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with their
             accepted papers, as well as ICS-CSR.
@@ -71,7 +71,7 @@
           </template>
           <q-card v-if="$q.screen.lt.sm" flat bordered square class="q-pa-sm q-mb-md">
             <q-card-section>
-              <h6 class="fpl__text-red q-mt-none">
+              <h6 class="q-mt-none">
                 All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
                 >: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with
                 their accepted papers, as well as ICS-CSR.

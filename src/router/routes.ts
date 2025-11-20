@@ -4,7 +4,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: '/',
     strict: true,
-    component: () => import('layouts/BlankLayout.vue'),
+    component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
@@ -12,48 +12,11 @@ const routes: RouteRecordRaw[] = [
         strict: true,
         component: () => import('pages/IndexPage.vue'),
       },
-    ],
-  },
-  {
-    path: '/',
-    strict: true,
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
       {
         path: '/accommodation/',
         name: 'accommodation',
         strict: true,
         component: () => import('pages/conference/AccommodationPage.vue'),
-      },
-      {
-        path: '/call-for-papers/',
-        name: 'callForPapers',
-        strict: true,
-        component: () => import('pages/conference/CallForPapersPage.vue'),
-      },
-      {
-        path: '/call-for-workshops/',
-        name: 'callForWorkshops',
-        strict: true,
-        component: () => import('pages/conference/CallForWorkshopsPage.vue'),
-      },
-      {
-        path: '/call-for-workshop-papers/',
-        name: 'callForWorkshopPapers',
-        strict: true,
-        component: () => import('pages/conference/CallForWorkshopPapersPage.vue'),
-      },
-      {
-        path: '/call-for-eu-workshops/',
-        name: 'callForEUWorkshops',
-        strict: true,
-        component: () => import('pages/conference/CallForEUWorkshopsPage.vue'),
-      },
-      {
-        path: '/code-of-conduct/',
-        name: 'codeOfConduct',
-        strict: true,
-        component: () => import('pages/CodeOfConductPage.vue'),
       },
       {
         path: '/conference/accepted-papers/',
@@ -62,28 +25,66 @@ const routes: RouteRecordRaw[] = [
         redirect: { name: 'acceptedPapers' },
       },
       {
-        path: '/conference/committee/',
-        redirect: {
-          name: 'committees',
-        },
+        path: '/calls/',
+        children: [
+          {
+            path: '',
+            name: 'calls',
+            strict: true,
+            redirect: {
+              name: 'callForPapers',
+            },
+          },
+          {
+            path: 'call-for-papers/',
+            name: 'callForPapers',
+            strict: true,
+            component: () => import('pages/calls/CallForPapersPage.vue'),
+          },
+          {
+            path: 'call-for-workshops/',
+            name: 'callForWorkshops',
+            strict: true,
+            component: () => import('pages/calls/CallForWorkshopsPage.vue'),
+          },
+        ],
       },
       {
-        path: '/conference/committees/',
-        name: 'committees',
-        strict: true,
-        component: () => import('pages/conference/CommitteesPage.vue'),
+        path: '/committees/',
+        children: [
+          {
+            path: '',
+            name: 'committees',
+            strict: true,
+            redirect: {
+              name: 'organizingCommittee',
+            },
+          },
+          {
+            path: '/committees/organizing-committee/',
+            name: 'organizingCommittee',
+            strict: true,
+            component: () => import('pages/committees/OrganizingCommitteePage.vue'),
+          },
+          {
+            path: '/committees/program-committee/',
+            name: 'programCommittee',
+            strict: true,
+            component: () => import('pages/committees/ProgramCommitteePage.vue'),
+          },
+          {
+            path: '/committees/steering-committee/',
+            name: 'steeringCommittee',
+            strict: true,
+            component: () => import('pages/committees/SteeringCommitteePage.vue'),
+          },
+        ],
       },
       {
         path: '/conference/presenter-info/',
         name: 'presenterInfo',
         strict: true,
         component: () => import('pages/conference/PresenterInfoPage.vue'),
-      },
-      {
-        path: '/conference/program-committee/',
-        name: 'programCommittee',
-        strict: true,
-        component: () => import('pages/conference/ProgramCommitteePage.vue'),
       },
       {
         path: '/contact/',

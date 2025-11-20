@@ -6,55 +6,73 @@ $breakpoint-xs: 599px !default;
 
 /* Colors */
 
-$ugent-blue: #1e64c8;
-$fpl-yellow: #fce275;
+$fpl-blue: #00f;
+$fpl-cyan: #0ff;
+$fpl-green: #0f0;
+
+$page-bg-color: $fpl-blue !default;
 
 $separator-color: #343c3f !default;
 
-.fpl__text-red,
-.text-ugent-blue {
-  color: $ugent-blue !important;
+.fpl__bg-color {
+  background-color: $page-bg-color !important;
 }
 
-.fpl__bg-red,
-.bg-ugent-blue {
-  background-color: $ugent-blue !important;
+.fpl__text-blue,
+.text-fpl-blue {
+  color: $fpl-blue !important;
 }
 
-.fpl__text-yellow,
-.text-fpl-yellow {
-  color: $fpl-yellow !important;
+.fpl__bg-blue,
+.bg-fpl-blue {
+  background-color: $fpl-blue !important;
 }
 
-.fpl__bg-yellow,
-.bg-fpl-yellow {
-  background-color: $fpl-yellow !important;
+.fpl__text-cyan,
+.text-fpl-cyan {
+  color: $fpl-cyan !important;
+}
+
+.fpl__bg-cyan,
+.bg-fpl-cyan {
+  background-color: $fpl-cyan !important;
+}
+
+.fpl__text-green,
+.text-fpl-green {
+  color: $fpl-green !important;
+}
+
+.fpl__bg-green,
+.bg-fpl-green {
+  background-color: $fpl-green !important;
 }
 
 /* Fonts */
 
 @font-face {
-  src: url(./fonts/mabry-light-pro.woff2);
-  font-family: 'Mabry Light';
-  font-weight: 300;
-}
-
-@font-face {
-  src: url(./fonts/mabry-bold-pro.woff2);
-  font-family: 'Mabry Bold';
-  font-weight: 700;
-}
-
-@font-face {
-  src: url(./fonts/mabry-mono-regular-pro.woff2);
-  font-family: 'Mabry Mono';
+  font-family: 'Hack';
+  src:
+    url('./fonts/hack-regular-subset.woff2') format('woff2'),
+    url('./fonts/hack-regular-subset.woff') format('woff');
   font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hack';
+  src:
+    url('./fonts/hack-bold-subset.woff2') format('woff2'),
+    url('./fonts/hack-bold-subset.woff') format('woff');
+  font-weight: 700;
+  font-style: normal;
 }
 
 /* Layout */
 
 body {
-  font-family: 'Mabry Light', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  background-color: $fpl-blue;
 }
 
 .fpl__layout {
@@ -91,6 +109,54 @@ body {
       min-width: 24px;
     }
   }
+
+  .fpl__desktop-layout {
+    padding-top: 2rem !important;
+  }
+
+  .fpl__sidebar {
+    .q-item {
+      padding: 0.5rem 0.1rem;
+    }
+
+    .q-item__section--avatar {
+      padding-right: 0.5rem;
+      min-width: 24px;
+    }
+  }
+
+  .fpl__sidebar-list {
+    .q-item__section--side > .q-icon {
+      margin-top: 0.25em;
+      font-size: 1em;
+    }
+
+    .q-router-link--exact-active {
+      color: inherit;
+
+      .q-router-link--exact-active .main-label {
+        font-weight: bold !important;
+      }
+    }
+  }
+
+  .fpl__sidebar-fixed {
+    position: sticky;
+    top: 3em;
+    align-self: flex-start;
+    max-height: calc(100vh);
+    overflow-y: auto;
+
+    .q-item {
+      padding: 0.25rem 0.5rem;
+      margin-left: -0.5rem;
+    }
+
+    .q-item__section--avatar {
+      padding-right: 0.5rem;
+      min-width: 24px;
+    }
+  }
 }
 
 .fpl__border-right {
@@ -108,12 +174,17 @@ body {
 .fpl__text-subtitle2,
 .fpl__router-link-menu,
 .text-mono,
+.text-mono-bold,
 code,
 kbd,
 pre,
 samp {
-  font-family: 'Mabry Mono', monospace;
+  font-family: 'Hack', monospace;
   word-spacing: -0.225em;
+}
+
+.text-mono-bold {
+  font-weight: 700;
 }
 
 .fpl__text-headline,
@@ -121,6 +192,16 @@ samp {
 .fpl__text-subtitle2 {
   line-height: 1.3;
   text-wrap: balance;
+
+  &:first-child {
+    margin-top: 0;
+  }
+}
+
+.fpl__text-subtitle2 {
+  background-color: $fpl-green;
+  padding: 0.2em 0.4em;
+  display: inline-block;
 }
 
 .fpl__text-headline {
@@ -132,11 +213,11 @@ samp {
 }
 
 .fpl__text-title {
-  font-size: 1.35em !important;
+  font-size: 1.25em !important;
   margin-top: 0;
 
   @media (min-width: $container-width) {
-    font-size: 1.5em !important;
+    font-size: 1.35em !important;
   }
 
   + hr.q-separator {
@@ -175,10 +256,6 @@ samp {
   }
 }
 
-.text-helvetica {
-  font-family: Helvetica, sans-serif;
-}
-
 .text-small {
   font-size: small !important;
 }
@@ -200,7 +277,8 @@ samp {
 }
 
 samp,
-.text-mono {
+.text-mono,
+.text-mono-bold {
   .text-body2 &,
   &.text-body2 {
     font-size: 0.85em;
@@ -223,31 +301,24 @@ samp,
 strong .text-weight-medium,
 .text-weight-bold,
 .text-weight-bolder {
-  font-family: 'Mabry Bold', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-weight: 700;
 }
 
 blockquote {
   margin: 1em 0;
   padding: 0 1em;
-  border-left: 1px dashed $ugent-blue;
+  border-left: 1px dashed $fpl-blue;
 }
 
 ul {
-  list-style-type: none;
+  list-style-type: square;
 }
 
 li {
   position: relative;
-  padding-left: 1.5em;
-  margin-left: -1.5em;
-
-  &:before {
-    content: '→'; // Unicode character for right arrow
-    position: absolute;
-    left: 0;
-    margin-right: 0.5em;
-  }
+  padding-left: 0.25em;
+  margin-left: -0.25em;
 }
 
 a {
@@ -268,7 +339,7 @@ a {
   h4,
   h5,
   h6 {
-    font-family: 'Mabry Bold', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-weight: 700;
     font-size: 1em;
     text-wrap: balance;
@@ -313,11 +384,7 @@ a {
 /* Images */
 
 .fpl__logo {
-  height: 36px;
-
-  &.a-lg {
-    height: 48px;
-  }
+  height: 72px;
 }
 
 .fpl__logo-footer {
@@ -340,7 +407,7 @@ a {
 
   .q-icon {
     vertical-align: bottom;
-    font-size: 1.35em;
+    font-size: 1.25em;
     margin-right: 0.4em;
   }
 
