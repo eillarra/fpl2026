@@ -25,6 +25,8 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build app
+        env:
+          GIT_COMMIT_HASH: ${{ github.sha }}
         run: yarn build
 
       - name: Copy .htaccess to dist
