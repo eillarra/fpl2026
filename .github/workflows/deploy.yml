@@ -1,0 +1,51 @@
+name: Deploy to FPL-Conference Websites
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.x'
+          cache: 'yarn'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Build app
+        run: yarn build
+
+      - name: Checkout target repository
+        uses: actions/checkout@v4
+        with:
+          repository: FPL-Conference/Websites
+          token: ${{ secrets.DEPLOY_TOKEN }}
+          path: target-repo
+
+      - name: Copy built files to target repository
+        run: |
+          cp target-repo/web/2026/.htaccess /tmp/.htaccess.backup
+          rm -rf target-repo/web/2026/*
+          cp -r dist/pwa/* target-repo/web/2026/
+          cp /tmp/.htaccess.backup target-repo/web/2026/.htaccess
+
+      - name: Commit and push to target repository
+        run: |
+          cd target-repo
+          git config user.name "Eneko Illarramendi"
+          git config user.email "eneko@illarra.com"
+          git add web/2026/
+          git commit -m "chore(2026): update site from fpl2026@${GITHUB_SHA::7}" || echo "No changes to commit"
+          git push
+        env:
+          GITHUB_SHA: ${{ github.sha }}
