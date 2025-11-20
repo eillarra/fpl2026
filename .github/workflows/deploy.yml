@@ -45,7 +45,7 @@ jobs:
           git config user.name "Eneko Illarramendi"
           git config user.email "eneko@illarra.com"
           git add web/2026/
-          git commit -m "chore(2026): update site from fpl2026@${GITHUB_SHA::7}" || echo "No changes to commit"
+          git commit -m "chore(2026): update site from eillarra/fpl2026@${GITHUB_SHA::7}" || echo "No changes to commit"
           git push
         env:
           GITHUB_SHA: ${{ github.sha }}

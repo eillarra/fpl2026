@@ -48,7 +48,6 @@ export default configure((/* ctx */) => {
       // rebuildCache: true, // rebuilds Vite/linter/etc cache on startup
 
       // publicPath: '/',
-      publicPath: process.env.PUBLIC_PATH || (process.env.GITHUB_ACTIONS ? '/fpl2026/' : '/'),
       // analyze: true,
       env: {
         APP_DOMAIN: process.env.APP_DOMAIN || 'localhost:9200',
