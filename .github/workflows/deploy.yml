@@ -29,8 +29,8 @@ jobs:
           GIT_COMMIT_HASH: ${{ github.sha }}
         run: yarn build
 
-      - name: Copy .htaccess to dist
-        run: cp deploy/.htaccess dist/pwa/.htaccess
+      - name: Copy nginx conf to dist
+        run: cp deploy/nginx.conf dist/pwa/.nginx
 
       - name: Checkout target repository
         uses: actions/checkout@v4
@@ -41,15 +41,15 @@ jobs:
 
       - name: Copy built files to target repository
         run: |
-          rm -rf target-repo/web/2026/*
-          cp -r dist/pwa/* target-repo/web/2026/
+          find target-repo/web/2026 -mindepth 1 -delete
+          cp -r dist/pwa/. target-repo/web/2026/
 
       - name: Commit and push to target repository
         run: |
           cd target-repo
           git config user.name "Eneko Illarramendi"
           git config user.email "eneko@illarra.com"
-          git add web/2026/
+          git add -A web/2026/
           git commit -m "chore(2026): update site from eillarra/fpl2026@${GITHUB_SHA::7}" || echo "No changes to commit"
           git push
         env:
