@@ -4,7 +4,7 @@
  * quasar.config file > pwa > workboxMode is set to "InjectManifest"
  */
 
-declare const self: ServiceWorkerGlobalScope & typeof globalThis & { skipWaiting: () => void };
+declare const self: ServiceWorkerGlobalScope & typeof globalThis & { skipWaiting: () => Promise<void> };
 
 import { clientsClaim } from 'workbox-core';
 import { ExpirationPlugin } from 'workbox-expiration';
@@ -12,13 +12,20 @@ import { precacheAndRoute, cleanupOutdatedCaches, createHandlerBoundToURL } from
 import { registerRoute, NavigationRoute } from 'workbox-routing';
 import { NetworkFirst } from 'workbox-strategies';
 
-self.skipWaiting();
-clientsClaim();
+const ensurePromise = <T>(value: T | Promise<T>) => Promise.resolve(value);
+
+const lifecycleReady = (async () => {
+  await ensurePromise(self.skipWaiting());
+  await ensurePromise(clientsClaim());
+  await ensurePromise(cleanupOutdatedCaches());
+})();
+
+lifecycleReady.catch((error) => {
+  console.error('[service-worker] Lifecycle initialization failed', error);
+});
 
 // Use with precache injection
 precacheAndRoute(self.__WB_MANIFEST);
-
-cleanupOutdatedCaches();
 
 // Network-first strategy for API calls
 registerRoute(

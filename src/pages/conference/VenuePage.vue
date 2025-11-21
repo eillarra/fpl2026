@@ -37,8 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, toRefs } from 'vue';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -48,15 +47,11 @@ import { iconAccommodation, iconMap } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { event, contentsDict, mainVenue } = storeToRefs(eventStore);
+const { event, contentsDict, mainVenue } = toRefs(eventStore);
 
-const aboutGhentText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.about']?.value as MarkdownText) || null,
-);
+const aboutGhentText = computed<MarkdownText | null>(() => contentsDict.value['ghent.about']?.value || null);
 
-const howToReachGhent = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.how_to_reach']?.value as MarkdownText) || null,
-);
+const howToReachGhent = computed<MarkdownText | null>(() => contentsDict.value['ghent.how_to_reach']?.value || null);
 
 const footerText = computed<string>(() => {
   if (!event.value) return '';

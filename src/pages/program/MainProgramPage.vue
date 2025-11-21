@@ -192,9 +192,9 @@ const navigationItems = computed((): NavigationItem[] => [
   },
 ]);
 
-const navigateTo = (routeName: string) => {
+const navigateTo = async (routeName: string) => {
   const query = selectedDay.value !== 'all' ? { day: selectedDay.value } : {};
-  router.push({ name: routeName, query });
+  await router.push({ name: routeName, query });
 };
 
 const isActiveRoute = (routeName: string) => {
@@ -204,7 +204,7 @@ const isActiveRoute = (routeName: string) => {
   return route.name === routeName;
 };
 
-const selectDay = (day: string) => {
+const selectDay = async (day: string) => {
   selectedDay.value = day;
 
   // Update query parameter (only if not 'all')
@@ -215,7 +215,7 @@ const selectDay = (day: string) => {
     query.day = day;
   }
 
-  router.replace({ query });
+  await router.replace({ query });
 };
 
 const setInitialDaySelection = () => {

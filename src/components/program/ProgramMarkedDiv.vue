@@ -74,7 +74,7 @@ const enhancedHtml = computed(() => {
   if (!props.text) return '';
 
   // First render the markdown
-  let html = render(props.text) as string;
+  let html = render(props.text);
 
   // Then replace paper-ref markers with target divs
   html = html.replace(/<paper-ref\s+([^>]+)><\/paper-ref>/g, (match, attributes) => {
@@ -109,7 +109,7 @@ function extractPaperData(attributes: string): { id: number; paper: EvanPaper } 
   return { id: paperId, paper };
 }
 
-function updateKeynoteRefs() {
+async function updateKeynoteRefs() {
   const newKeynoteRefs: Array<{ id: number; keynote: EvanKeynote; mounted: boolean }> = [];
 
   // Extract keynote references from the original text using regex
@@ -135,17 +135,16 @@ function updateKeynoteRefs() {
   keynoteRefs.value = newKeynoteRefs;
 
   // Mount the teleport targets after DOM update
-  nextTick(() => {
-    keynoteRefs.value.forEach((keynoteRef) => {
-      const target = document.getElementById(`keynote-ref-${keynoteRef.id}`);
-      if (target) {
-        keynoteRef.mounted = true;
-      }
-    });
+  await nextTick();
+  keynoteRefs.value.forEach((keynoteRef) => {
+    const target = document.getElementById(`keynote-ref-${keynoteRef.id}`);
+    if (target) {
+      keynoteRef.mounted = true;
+    }
   });
 }
 
-function updatePaperRefs() {
+async function updatePaperRefs() {
   const newPaperRefs: Array<{ id: number; paper: EvanPaper; mounted: boolean }> = [];
 
   // Extract all paper references from the text
@@ -169,25 +168,34 @@ function updatePaperRefs() {
   paperRefs.value = newPaperRefs;
 
   // Mount the teleport targets after DOM update
-  nextTick(() => {
-    paperRefs.value.forEach((paperRef) => {
-      const target = document.getElementById(`paper-ref-${paperRef.id}`);
-      if (target) {
-        paperRef.mounted = true;
-      }
-    });
+  await nextTick();
+  paperRefs.value.forEach((paperRef) => {
+    const target = document.getElementById(`paper-ref-${paperRef.id}`);
+    if (target) {
+      paperRef.mounted = true;
+    }
   });
 }
 
-function updateAllRefs() {
-  updatePaperRefs();
-  updateKeynoteRefs();
+async function updateAllRefs() {
+  await updatePaperRefs();
+  await updateKeynoteRefs();
 }
 
 // Watch for text changes and update all refs
-watch(() => props.text, updateAllRefs, { immediate: true });
+watch(
+  () => props.text,
+  () => {
+    updateAllRefs().catch((error) => {
+      throw error;
+    });
+  },
+  { immediate: true },
+);
 
 onMounted(() => {
-  updateAllRefs();
+  updateAllRefs().catch((error) => {
+    throw error;
+  });
 });
 </script>

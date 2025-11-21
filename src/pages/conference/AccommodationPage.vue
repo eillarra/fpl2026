@@ -19,27 +19,20 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, toRefs } from 'vue';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
 
 const eventStore = useEventStore();
 
-const { contentsDict } = storeToRefs(eventStore);
+const { contentsDict } = toRefs(eventStore);
 
-const accommodationText = computed<MarkdownText | null>(
-  () => (contentsDict.value['accommodation']?.value as MarkdownText) || null,
-);
+const accommodationText = computed<MarkdownText | null>(() => contentsDict.value['accommodation']?.value || null);
 
-const aboutGhentText = computed<MarkdownText | null>(
-  () => (contentsDict.value['ghent.about']?.value as MarkdownText) || null,
-);
+const aboutGhentText = computed<MarkdownText | null>(() => contentsDict.value['ghent.about']?.value || null);
 
-const gmapsEmbedUrl = computed<Url | null>(
-  () => (contentsDict.value['accommodation.gmaps_embed_url']?.value as string) || null,
-);
+const gmapsEmbedUrl = computed<Url | null>(() => contentsDict.value['accommodation.gmaps_embed_url']?.value || null);
 
 useMeta(() => {
   return {

@@ -16,8 +16,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, toRefs } from 'vue';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -26,9 +25,9 @@ import { iconEmail } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { contactEmail, contentsDict } = storeToRefs(eventStore);
+const { contactEmail, contentsDict } = toRefs(eventStore);
 
-const contactText = computed<MarkdownText | null>(() => (contentsDict.value['contact']?.value as MarkdownText) || null);
+const contactText = computed<MarkdownText | null>(() => contentsDict.value['contact']?.value || null);
 
 useMeta(() => {
   return {

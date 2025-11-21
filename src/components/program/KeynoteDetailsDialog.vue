@@ -105,10 +105,6 @@
               <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
               <marked-div :text="keynote.abstract" />
             </div>
-            <div v-if="keynote.extra_data?.speaker_bio" class="q-mb-md">
-              <div class="text-subtitle2 text-grey-7 q-mb-xs">About the Speaker</div>
-              <marked-div :text="keynote.extra_data.speaker_bio" />
-            </div>
           </div>
         </template>
       </fpl-dialog-content>

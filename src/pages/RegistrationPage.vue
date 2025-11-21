@@ -31,7 +31,7 @@
       Registrations for <span class="text-no-wrap">{{ event.name }}</span> are not open at this time.
     </h6>
     <fpl-subtitle>Registration fees</fpl-subtitle>
-    <template v-if="event.fees.lenght">
+    <template v-if="event.fees.length">
       <q-markup-table flat>
         <thead>
           <tr class="text-weight-bold">
@@ -98,8 +98,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, onMounted, toRefs } from 'vue';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
@@ -109,7 +108,7 @@ import { iconRegistration } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { event } = storeToRefs(eventStore);
+const { event } = toRefs(eventStore);
 
 // Load program data when component mounts
 onMounted(async () => {

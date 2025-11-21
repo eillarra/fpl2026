@@ -267,15 +267,15 @@ const props = defineProps<{
 const sessionProgramContent = ref<string>('');
 const subsessionProgramContent = ref<Map<number, string>>(new Map());
 
-watchEffect(async () => {
+const updateSessionProgramContent = async () => {
   if (props.session.program && eventStore.programDataLoaded) {
     sessionProgramContent.value = await renderTemplate(props.session.program);
   } else {
     sessionProgramContent.value = '';
   }
-});
+};
 
-watchEffect(async () => {
+const updateSubsessionProgramContent = async () => {
   const contentMap = new Map<number, string>();
 
   if (props.session.subsessions && eventStore.programDataLoaded) {
@@ -287,6 +287,18 @@ watchEffect(async () => {
   }
 
   subsessionProgramContent.value = contentMap;
+};
+
+watchEffect(() => {
+  updateSessionProgramContent().catch((error) => {
+    throw error;
+  });
+});
+
+watchEffect(() => {
+  updateSubsessionProgramContent().catch((error) => {
+    throw error;
+  });
 });
 
 const sessionType = computed<'regular' | 'social' | 'catering'>(() => {

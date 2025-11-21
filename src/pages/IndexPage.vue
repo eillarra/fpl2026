@@ -40,8 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, toRefs } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
 import { dateRange, formatImportantDate, passedImportantDate } from '@evan/utils/dates';
@@ -50,7 +49,7 @@ import { iconVenue } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { event } = storeToRefs(eventStore);
+const { event } = toRefs(eventStore);
 
 const ghent = computed<string>(() => {
   if (!event.value) return '';

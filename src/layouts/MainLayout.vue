@@ -97,7 +97,7 @@
                   >
                 </p>
               </div>
-              <div class="col-12 col-md-4 offset-md-1" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
+              <div class="col-12 col-md-3 offset-md-1" :class="{ 'q-mt-lg': $q.screen.lt.sm }">
                 <span class="text-caption">Organised by</span>
                 <div class="row q-col-gutter-md fpl__footer-organizers q-my-md">
                   <div class="col">
@@ -121,8 +121,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, ref, toRefs } from 'vue';
 
 import { usePWAInstall } from '@evan/composables/usePWAInstall';
 import { useEventStore } from '@evan/stores/event';
@@ -156,7 +155,7 @@ interface MenuItem {
 const eventStore = useEventStore();
 const pwaInstall = usePWAInstall();
 
-const { _loaded, event, contentsDict } = storeToRefs(eventStore);
+const { _loaded, event, contentsDict } = toRefs(eventStore);
 
 const leftDrawer = ref<boolean>(false);
 const menu: MenuItem[] = [
@@ -197,7 +196,5 @@ const footerText = computed<string>(() => {
   return `The ${event.value.full_name} (${event.value.name}), will be held ${dates} in ${event.value.city}, ${event.value.country.name}.`;
 });
 
-const submissionsUrl = computed<Url | null>(
-  () => (contentsDict.value['calls.call_for_papers.url']?.value as string) || null,
-);
+const submissionsUrl = computed<Url | null>(() => contentsDict.value['calls.call_for_papers.url']?.value || null);
 </script>

@@ -15,6 +15,26 @@ export function useSearchQuery(queryParam = 'q', debounceMs = 300) {
 
   let debounceTimeout: NodeJS.Timeout | null = null;
 
+  const updateQueryParam = (newQuery: string) => {
+    const currentQuery = { ...route.query };
+
+    if (newQuery) {
+      currentQuery[queryParam] = newQuery;
+    } else {
+      delete currentQuery[queryParam];
+    }
+
+    const navigationPromise = router.replace({
+      name: route.name || undefined,
+      params: route.params,
+      query: currentQuery,
+    });
+
+    navigationPromise.catch((error) => {
+      throw error;
+    });
+  };
+
   // Update URL when search query changes (with debouncing)
   watch(
     searchQuery,
@@ -24,19 +44,7 @@ export function useSearchQuery(queryParam = 'q', debounceMs = 300) {
       }
 
       debounceTimeout = setTimeout(() => {
-        const currentQuery = { ...route.query };
-
-        if (newQuery) {
-          currentQuery[queryParam] = newQuery;
-        } else {
-          delete currentQuery[queryParam];
-        }
-
-        router.replace({
-          name: route.name || undefined,
-          params: route.params,
-          query: currentQuery,
-        });
+        updateQueryParam(newQuery);
       }, debounceMs);
     },
     { immediate: false },

@@ -1,7 +1,8 @@
-import type { AxiosError, AxiosResponse } from 'axios';
 import type { QNotifyCreateOptions } from 'quasar';
 
 import { Notify as QuasarNotify } from 'quasar';
+
+import type { ApiError } from '@evan/api/client';
 
 import { iconCached, iconCheck, iconError, iconInfo, iconWarning } from '@/icons';
 
@@ -15,11 +16,7 @@ class Notify {
     });
   }
 
-  apiError(error: AxiosError): void {
-    const res: AxiosResponse | undefined = error.response;
-
-    if (res == undefined) return;
-
+  apiError(error: ApiError): void {
     const types: StatusMap = {
       400: 'warning',
       401: 'warning',
@@ -34,28 +31,31 @@ class Notify {
       500: 'white',
     };
 
-    const type = types[res.status] || 'warning';
-    const caption = `${res.status} ${res.statusText}`.toUpperCase() || '';
+    const type = types[error.status] || 'warning';
+    const caption = `${error.status} ${error.statusText}`.toUpperCase() || '';
     let msg = '';
 
     // 400 Bad Request || 403 Forbidden
-    if (res.status == 400 || res.status == 403) {
+    if (error.status === 400 || error.status === 403) {
       const errors: string[] = [];
-      Object.keys(res.data).forEach((k) => {
-        if (typeof res.data[k] == 'string') {
-          errors.push(`<strong>${k}</strong>: ${res.data[k]}`);
-        } else {
-          res.data[k].forEach((v: string) => {
-            errors.push(`<strong>${k}</strong>: ${v}`);
-          });
-        }
-      });
-      msg = errors.join('<br>') || '';
+      if (error.data) {
+        Object.keys(error.data).forEach((k) => {
+          if (typeof error.data[k] === 'string') {
+            errors.push(`<strong>${k}</strong>: ${error.data[k]}`);
+          } else if (Array.isArray(error.data[k])) {
+            error.data[k].forEach((v: string) => {
+              errors.push(`<strong>${k}</strong>: ${v}`);
+            });
+          }
+        });
+      }
+      msg = errors.join('<br>') || error.message;
     }
 
     // 500 Internal Server Error
-    if (res.status == 500) {
-      msg = res.data.detail || '';
+    if (error.status === 500) {
+      const detail = error.data && typeof error.data === 'object' && 'detail' in error.data ? error.data.detail : null;
+      msg = (typeof detail === 'string' ? detail : null) || error.message;
     }
 
     this.create({
@@ -65,11 +65,11 @@ class Notify {
       message: msg,
       caption: caption,
       type: type,
-      icon: type == 'negative' ? iconError : iconWarning,
+      icon: type === 'negative' ? iconError : iconWarning,
       actions: [
         {
           label: '✕',
-          color: textColors[res.status] || 'grey-8',
+          color: textColors[error.status] || 'grey-8',
         },
       ],
       attrs: {

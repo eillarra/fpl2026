@@ -8,6 +8,7 @@ import { watchEffect } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
 
+import { EVAN_EVENT_CODE } from '@/constants';
 import { notify } from '@/utils/notify';
 
 Loading.show({
@@ -18,7 +19,7 @@ Loading.show({
 
 const eventStore = useEventStore();
 
-eventStore.init().catch(() => {
+eventStore.init(EVAN_EVENT_CODE).catch(() => {
   Loading.hide();
 });
 

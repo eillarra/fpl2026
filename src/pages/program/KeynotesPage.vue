@@ -87,13 +87,12 @@ const eventStore = useEventStore();
 const selectedDate = inject<{ value: string }>('selectedDate');
 
 const selectedKeynote = ref<EvanKeynote | null>(null);
-const keynoteDialog = ref<InstanceType<typeof KeynoteDetailsDialog> | null>(null);
+const keynoteDialog = ref<{ openDialog: () => void } | null>(null);
 
-const openKeynoteDetails = (keynote: EvanKeynote) => {
+const openKeynoteDetails = async (keynote: EvanKeynote) => {
   selectedKeynote.value = keynote;
-  nextTick(() => {
-    keynoteDialog.value?.openDialog();
-  });
+  await nextTick();
+  keynoteDialog.value?.openDialog();
 };
 
 const isMainKeynote = (keynote: EvanKeynote): boolean => {

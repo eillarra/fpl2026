@@ -62,7 +62,6 @@ import { useRoute, useRouter } from 'vue-router';
 import { useEventStore } from '@evan/stores/event';
 import FplDialog from '@/components/FplDialog.vue';
 
-import { api } from '@/boot/axios';
 import { useFavorites } from '@/composables/useFavorites';
 import {
   filterSessionsWithTypes,
@@ -89,6 +88,14 @@ const selectedDate = inject<{ value: string }>('selectedDate');
 const searchQuery = ref('');
 
 const selectedSession = ref<EvanSession | null>(null);
+const closeSessionDialogRouteUpdate = async () => {
+  window.history.replaceState({ ...window.history.state, preserveScroll: true }, '');
+  await router.replace({
+    name: 'program',
+    query: route.query,
+  });
+};
+
 const showSessionDialog = computed<boolean>({
   get() {
     return !!selectedSession.value;
@@ -98,10 +105,8 @@ const showSessionDialog = computed<boolean>({
       selectedSession.value = null;
 
       if (route.params.sessionSlug) {
-        window.history.replaceState({ ...window.history.state, preserveScroll: true }, '');
-        router.replace({
-          name: 'program',
-          query: route.query,
+        closeSessionDialogRouteUpdate().catch((error) => {
+          throw error;
         });
       }
     }
@@ -233,6 +238,10 @@ const openSessionDetails = async (session: EvanSession) => {
 
 const sessionSlug = computed<string | null>(() => (route.params.sessionSlug as string) || null);
 
+const redirectToProgram = async () => {
+  await router.push({ name: 'program', query: route.query });
+};
+
 const fetchSessionBySlug = async (slug: string) => {
   if (!eventStore.programDataLoaded) {
     await eventStore.fetchProgramData();
@@ -241,23 +250,19 @@ const fetchSessionBySlug = async (slug: string) => {
   const session = eventStore.sessions.find((s) => s.slug === slug);
 
   if (!session) {
-    router.push({ name: 'program', query: route.query });
+    await redirectToProgram();
     return;
   }
 
-  try {
-    const response = await api.get(session.self);
-    selectedSession.value = response.data;
-  } catch (error) {
-    console.error('Failed to fetch session details:', error);
-    router.push({ name: 'program', query: route.query });
-  }
+  selectedSession.value = await eventStore.fetchSessionDetail(session);
 };
 
 watch(sessionSlug, (newSlug) => {
   if (newSlug) {
     if (!selectedSession.value || selectedSession.value.slug !== newSlug) {
-      fetchSessionBySlug(newSlug);
+      fetchSessionBySlug(newSlug).catch((error) => {
+        throw error;
+      });
     }
   } else {
     selectedSession.value = null;
@@ -266,7 +271,9 @@ watch(sessionSlug, (newSlug) => {
 
 onMounted(() => {
   if (route.params.sessionSlug) {
-    fetchSessionBySlug(route.params.sessionSlug as string);
+    fetchSessionBySlug(route.params.sessionSlug as string).catch((error) => {
+      throw error;
+    });
   }
 });
 </script>

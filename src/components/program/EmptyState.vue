@@ -38,9 +38,9 @@ const showViewAllDaysAction = computed(() => {
   return props.detectDayFilter && route.query.day && route.query.day !== 'all';
 });
 
-const clearDayFilter = () => {
+const clearDayFilter = async () => {
   const query = { ...route.query };
   delete query.day;
-  router.replace({ query });
+  await router.replace({ query });
 };
 </script>

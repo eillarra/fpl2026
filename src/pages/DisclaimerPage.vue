@@ -5,19 +5,16 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
+import { computed, toRefs } from 'vue';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
 
 const eventStore = useEventStore();
 
-const { contentsDict } = storeToRefs(eventStore);
+const { contentsDict } = toRefs(eventStore);
 
-const legalNoticeText = computed<MarkdownText | null>(
-  () => (contentsDict.value['disclaimer']?.value as MarkdownText) || null,
-);
+const legalNoticeText = computed<MarkdownText | null>(() => contentsDict.value['disclaimer']?.value || null);
 
 useMeta(() => {
   return {

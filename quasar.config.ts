@@ -15,7 +15,7 @@ export default configure((/* ctx */) => {
     // app boot file (/src/boot)
     // --> boot files are part of "main.js"
     // https://quasar.dev/quasar-cli-vite/boot-files
-    boot: ['sentry', 'axios', 'components'],
+    boot: ['sentry', 'components'],
 
     // https://quasar.dev/quasar-cli-vite/quasar-config-js#css
     css: ['app.scss'],
@@ -80,7 +80,8 @@ export default configure((/* ctx */) => {
               tsconfigPath: 'tsconfig.vue-tsc.json',
             },
             eslint: {
-              lintCommand: 'eslint "./**/*.{js,ts,mjs,cjs,vue}"',
+              lintCommand: 'eslint -c ./eslint.config.js "./src*/**/*.{ts,js,mjs,cjs,vue}"',
+              useFlatConfig: true,
             },
           },
           { server: false },
