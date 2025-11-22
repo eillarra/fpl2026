@@ -232,14 +232,13 @@
 </template>
 
 <script setup lang="ts">
-// Types are now globally available - no import needed!
-
 import { computed, ref, watchEffect } from 'vue';
 import { useQuasar } from 'quasar';
 
-import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
 import { useProgramTemplate } from '@evan/composables/useProgramTemplate';
 import { useEventStore } from '@evan/stores/event';
+import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
+
 import {
   getSessionDisplayTitle,
   getSubsessionDisplayTitle,
@@ -248,9 +247,9 @@ import {
   getRoomName,
 } from '@/utils/program';
 
+import MarkedDiv from '@evan/components/MarkedDiv.vue';
 import FplDialogContent from '@/components/FplDialogContent.vue';
 import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
-import MarkedDiv from '@evan/components/MarkedDiv.vue';
 import ProgramMarkedDiv from '@/components/program/ProgramMarkedDiv.vue';
 
 import { iconEmail, iconPerson } from '@/icons';

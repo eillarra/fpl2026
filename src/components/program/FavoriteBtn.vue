@@ -15,7 +15,7 @@
 import { computed } from 'vue';
 import { useQuasar } from 'quasar';
 
-import { useFavorites } from '@/composables/useFavorites';
+import { useFavorites } from '@evan/composables/useFavorites';
 
 import { iconStar, iconStarFull } from '@/icons';
 

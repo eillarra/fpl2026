@@ -89,13 +89,14 @@
 import { computed, ref, inject } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
+import { searchInFields } from '@evan/utils/text';
+
 import { getSessionDisplayTitle } from '@/utils/program';
-import { searchInFields } from '@/utils/search';
 
 import FplSearchBar from '@/components/FplSearchBar.vue';
 import FplSeparator from '@/components/FplSeparator.vue';
-import PaperDetailsDialog from '@/components/program/PaperDetailsDialog.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
+import PaperDetailsDialog from '@/components/program/PaperDetailsDialog.vue';
 import ProceedingsDialog from '@/components/program/ProceedingsDialog.vue';
 
 import { iconAddCircle } from '@/icons';

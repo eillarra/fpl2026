@@ -74,7 +74,13 @@ import { computed, onMounted, ref, provide, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 
 import { useEventStore } from '@evan/stores/event';
+
 import { getAvailableDays } from '@/utils/program';
+
+import LoadingState from '@/components/program/LoadingState.vue';
+import ErrorState from '@/components/program/ErrorState.vue';
+import EmptyState from '@/components/program/EmptyState.vue';
+import DayPills from '@/components/program/DayPills.vue';
 
 import {
   iconArticle,
@@ -88,11 +94,6 @@ import {
   iconWorkshop,
   iconWorkshopFilled,
 } from '@/icons';
-
-import LoadingState from '@/components/program/LoadingState.vue';
-import ErrorState from '@/components/program/ErrorState.vue';
-import EmptyState from '@/components/program/EmptyState.vue';
-import DayPills from '@/components/program/DayPills.vue';
 
 interface NavigationItem {
   route: string;

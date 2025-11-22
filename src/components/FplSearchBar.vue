@@ -54,7 +54,7 @@
 <script setup lang="ts">
 import { watch, computed, toRefs } from 'vue';
 
-import { useSearchQuery } from '@/composables/useSearchQuery';
+import { useSearchQuery } from '@evan/composables/useSearchQuery';
 import { useEventStore } from '@evan/stores/event';
 
 import { iconSearch, iconClear, iconTags } from '@/icons';

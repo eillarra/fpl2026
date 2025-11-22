@@ -59,10 +59,10 @@
 import { ref, computed, inject, onMounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
+import { useFavorites } from '@evan/composables/useFavorites';
 import { useEventStore } from '@evan/stores/event';
-import FplDialog from '@/components/FplDialog.vue';
 
-import { useFavorites } from '@/composables/useFavorites';
+import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 import {
   filterSessionsWithTypes,
   groupSessionsByDayAdvanced as _groupSessionsByDayAdvanced,
@@ -71,8 +71,8 @@ import {
   getKeynoteAvatar,
   type EvanSession,
 } from '@/utils/program';
-import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
+import FplDialog from '@/components/FplDialog.vue';
 import FplSearchBar from '@/components/FplSearchBar.vue';
 import FplSeparator from '@/components/FplSeparator.vue';
 import EmptyState from '@/components/program/EmptyState.vue';

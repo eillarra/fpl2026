@@ -74,8 +74,9 @@
 import { computed, ref, inject } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
+import { searchInFields } from '@evan/utils/text';
+
 import { getSessionDisplayTitle } from '@/utils/program';
-import { searchInFields } from '@/utils/search';
 
 import FplDialog from '@/components//FplDialog.vue';
 import FplSearchBar from '@/components/FplSearchBar.vue';

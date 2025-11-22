@@ -72,6 +72,7 @@
 import { ref, computed, nextTick, inject } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
+
 import { formatProgramTime, getRoomName, sortKeynotes, getKeynoteAvatar } from '@/utils/program';
 
 import FplSeparator from '@/components/FplSeparator.vue';

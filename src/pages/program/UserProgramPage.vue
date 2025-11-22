@@ -61,16 +61,17 @@
 <script setup lang="ts">
 import { ref, computed, inject } from 'vue';
 
-import { useEventStore } from '@evan/stores/event';
 import { usePersonalCalendar } from '@evan/composables/usePersonalCalendar';
+import { useFavorites } from '@evan/composables/useFavorites';
+import { useEventStore } from '@evan/stores/event';
 import {
   groupSessionsByDay as _groupSessionsByDay,
   getTrackName,
   getRoomName,
   getSessionDisplayTitle,
 } from '@evan/utils/program';
-import { useFavorites } from '@/composables/useFavorites';
-import { searchInFields } from '@/utils/search';
+import { searchInFields } from '@evan/utils/text';
+
 import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 
 import FplDialog from '@/components//FplDialog.vue';
