@@ -42,6 +42,12 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/calls/CallForPapersPage.vue'),
           },
           {
+            path: 'call-for-papers-journal-track/',
+            name: 'callForPapersJournal',
+            strict: true,
+            component: () => import('pages/calls/CallForPapersJournalPage.vue'),
+          },
+          {
             path: 'call-for-workshops/',
             name: 'callForWorkshops',
             strict: true,

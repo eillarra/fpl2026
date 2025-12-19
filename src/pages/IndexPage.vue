@@ -21,20 +21,7 @@
     </div>
     <div v-if="importantDates.length > 0" class="col-12">
       <fpl-subtitle>Important dates</fpl-subtitle>
-      <q-markup-table flat>
-        <thead>
-          <tr class="text-weight-bold">
-            <th class="text-left">Event</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody class="text-body1">
-          <tr v-for="date in importantDates" :key="date.label">
-            <td>{{ date.label }}</td>
-            <td :class="{ 'text-grey': date.is_past }">{{ date.formatted }}</td>
-          </tr>
-        </tbody>
-      </q-markup-table>
+      <important-dates-list :dates="importantDates" />
     </div>
   </div>
 </template>
@@ -43,7 +30,9 @@
 import { computed, toRefs } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
-import { dateRange, formatImportantDate, passedImportantDate } from '@evan/utils/dates';
+import { dateRange } from '@evan/utils/dates';
+
+import ImportantDatesList from '@/components/ImportantDatesList.vue';
 
 import { iconVenue } from '@/icons';
 
@@ -58,11 +47,6 @@ const ghent = computed<string>(() => {
 
 const importantDates = computed<ImportantDate[]>(() => {
   if (!event.value) return [];
-  return event.value.extra_data.important_dates.map((d) => ({
-    ...d,
-    label: d.aoe ? `${d.label} (AoE)` : d.label,
-    formatted: formatImportantDate(d, d.aoe),
-    is_past: passedImportantDate(d),
-  }));
+  return event.value.extra_data.important_dates;
 });
 </script>

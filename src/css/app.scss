@@ -71,7 +71,6 @@ $separator-color: #343c3f !default;
 /* Layout */
 
 body {
-  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
   background-color: $fpl-blue;
 }
 
@@ -301,14 +300,13 @@ samp,
 strong .text-weight-medium,
 .text-weight-bold,
 .text-weight-bolder {
-  font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
   font-weight: 700;
 }
 
 blockquote {
   margin: 1em 0;
   padding: 0 1em;
-  border-left: 1px dashed $fpl-blue;
+  border-left: 3px solid $fpl-green;
 }
 
 ul {
@@ -339,7 +337,6 @@ a {
   h4,
   h5,
   h6 {
-    font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
     font-weight: 700;
     font-size: 1em;
     text-wrap: balance;

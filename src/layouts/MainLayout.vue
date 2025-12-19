@@ -127,8 +127,8 @@ import { usePWAInstall } from '@evan/composables/usePWAInstall';
 import { useEventStore } from '@evan/stores/event';
 import { dateRange } from '@evan/utils/dates';
 
-import FplLogo from '@/components/logos/FplLogo.vue';
 import SidebarMenu from '@/components/SidebarMenu.vue';
+import FplLogo from '@/components/logos/FplLogo.vue';
 import UgentLogo from '@/components/logos/UgentLogo.vue';
 
 import {
@@ -165,6 +165,7 @@ const menu: MenuItem[] = [
     label: 'Calls',
     icon: iconSend,
     children: [
+      { route: 'callForPapersJournal', label: 'Call for Papers: Journal Track' },
       { route: 'callForPapers', label: 'Call for Papers' },
       { route: 'callForWorkshops', label: 'Call for Workshops & Tutorials' },
     ],

@@ -41,6 +41,7 @@ import { computed, ref, nextTick, onMounted, watch } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
 import { render } from '@evan/utils/markdown';
+import { logger } from '@evan/utils/logger';
 
 import PaperDetailsDialog from './PaperDetailsDialog.vue';
 import KeynoteDetailsDialog from './KeynoteDetailsDialog.vue';
@@ -186,16 +187,12 @@ async function updateAllRefs() {
 watch(
   () => props.text,
   () => {
-    updateAllRefs().catch((error) => {
-      throw error;
-    });
+    updateAllRefs().catch((err) => logger.error('Failed to update refs on text change', { error: String(err) }));
   },
   { immediate: true },
 );
 
 onMounted(() => {
-  updateAllRefs().catch((error) => {
-    throw error;
-  });
+  updateAllRefs().catch((err) => logger.error('Failed to update refs on mount', { error: String(err) }));
 });
 </script>

@@ -61,6 +61,7 @@ import { useRoute, useRouter } from 'vue-router';
 
 import { useFavorites } from '@evan/composables/useFavorites';
 import { useEventStore } from '@evan/stores/event';
+import { logger } from '@evan/utils/logger';
 
 import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 import {
@@ -105,9 +106,9 @@ const showSessionDialog = computed<boolean>({
       selectedSession.value = null;
 
       if (route.params.sessionSlug) {
-        closeSessionDialogRouteUpdate().catch((error) => {
-          throw error;
-        });
+        closeSessionDialogRouteUpdate().catch((err) =>
+          logger.error('Failed to close session dialog', { error: String(err) }),
+        );
       }
     }
   },
@@ -260,9 +261,9 @@ const fetchSessionBySlug = async (slug: string) => {
 watch(sessionSlug, (newSlug) => {
   if (newSlug) {
     if (!selectedSession.value || selectedSession.value.slug !== newSlug) {
-      fetchSessionBySlug(newSlug).catch((error) => {
-        throw error;
-      });
+      fetchSessionBySlug(newSlug).catch((err) =>
+        logger.error('Failed to fetch session by slug', { slug: newSlug, error: String(err) }),
+      );
     }
   } else {
     selectedSession.value = null;
@@ -271,9 +272,10 @@ watch(sessionSlug, (newSlug) => {
 
 onMounted(() => {
   if (route.params.sessionSlug) {
-    fetchSessionBySlug(route.params.sessionSlug as string).catch((error) => {
-      throw error;
-    });
+    const slug = route.params.sessionSlug as string;
+    fetchSessionBySlug(slug).catch((err) =>
+      logger.error('Failed to fetch session on mount', { slug, error: String(err) }),
+    );
   }
 });
 </script>

@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.16.4",
-    "@sentry/vue": "^8.32.0",
+    "@sentry/vue": "^9.41.0",
     "evan-kit": "file:./evan-kit",
     "pinia": "^3.0.1",
     "quasar": "^2.16.0",

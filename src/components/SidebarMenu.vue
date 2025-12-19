@@ -11,7 +11,7 @@
         <q-item-section>
           <span :class="{ 'text-weight-bold': isItemActive(item) }">{{ item.label }}</span>
           <ul v-if="item.children" class="q-pl-none fpl__router-link-menu">
-            <li v-for="(child, idx) in item.children" :key="idx">
+            <li v-for="(child, idx) in item.children" :key="idx" class="text-wrap-balance">
               <router-link
                 :to="{ name: child.route }"
                 class="inherit"

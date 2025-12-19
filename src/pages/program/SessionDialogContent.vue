@@ -238,6 +238,7 @@ import { useQuasar } from 'quasar';
 import { useProgramTemplate } from '@evan/composables/useProgramTemplate';
 import { useEventStore } from '@evan/stores/event';
 import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
+import { logger } from '@evan/utils/logger';
 
 import {
   getSessionDisplayTitle,
@@ -289,15 +290,15 @@ const updateSubsessionProgramContent = async () => {
 };
 
 watchEffect(() => {
-  updateSessionProgramContent().catch((error) => {
-    throw error;
-  });
+  updateSessionProgramContent().catch((err) =>
+    logger.error('Failed to update session program content', { error: String(err) }),
+  );
 });
 
 watchEffect(() => {
-  updateSubsessionProgramContent().catch((error) => {
-    throw error;
-  });
+  updateSubsessionProgramContent().catch((err) =>
+    logger.error('Failed to update subsession program content', { error: String(err) }),
+  );
 });
 
 const sessionType = computed<'regular' | 'social' | 'catering'>(() => {
