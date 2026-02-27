@@ -1,3 +1,16 @@
+<style scoped>
+.fpl__event-caption {
+  text-decoration: none;
+  color: inherit;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+
+.fpl__event-caption:hover {
+  opacity: 1;
+}
+</style>
+
 <template>
   <q-layout v-show="_loaded" view="hHh lpr lfr" class="fpl__layout">
     <q-header v-if="$q.screen.lt.md" class="fpl__header bg-white text-dark">
@@ -62,7 +75,16 @@
             </div>
 
             <!-- Main content -->
-            <div class="col bg-white q-py-xl">
+            <div class="col bg-white q-pt-sm q-pb-xl">
+              <router-link
+                v-if="event"
+                :to="{ name: 'venue' }"
+                class="fpl__event-caption row items-center q-mt-md q-mb-xl"
+              >
+                <span class="text-caption"
+                  ><strong class="text-mono">{{ event.name }}</strong> &middot; {{ eventCaption }}</span
+                >
+              </router-link>
               <div :class="$q.screen.gt.sm ? 'q-pr-xl' : ''">
                 <router-view />
               </div>
@@ -90,7 +112,7 @@
                 </div>
                 <p class="text-body1 q-mt-lg">{{ footerText }}</p>
                 <p class="text-caption">
-                  <strong>&copy; 2025 Ghent University</strong><br />
+                  <strong>&copy; {{ copyrightYear }} Ghent University</strong><br />
                   <span
                     >The images on this web site are reproduced with the permission of the copyright owner,
                     <a href="https://stad.gent/en" target="_blank" rel="noopener noreferrer">Stad Gent</a>.</span
@@ -127,12 +149,13 @@ import { usePWAInstall } from '@evan/composables/usePWAInstall';
 import { useEventStore } from '@evan/stores/event';
 import { dateRange } from '@evan/utils/dates';
 
-import SidebarMenu from '@/components/SidebarMenu.vue';
+import SidebarMenu, { type MenuItem } from '@/components/SidebarMenu.vue';
 import FplLogo from '@/components/logos/FplLogo.vue';
 import UgentLogo from '@/components/logos/UgentLogo.vue';
 
 import {
   iconAccommodation,
+  iconChip,
   iconClose,
   iconCommittees,
   iconEasyChair,
@@ -143,14 +166,6 @@ import {
   iconSend,
   iconVenue,
 } from '@/icons';
-
-interface MenuItem {
-  route: string;
-  label: string;
-  icon?: string;
-  children?: MenuItem[];
-  closed?: boolean;
-}
 
 const eventStore = useEventStore();
 const pwaInstall = usePWAInstall();
@@ -168,9 +183,11 @@ const menu: MenuItem[] = [
       { route: 'callForPapersJournal', label: 'Call for Papers: Journal Track' },
       { route: 'callForPapers', label: 'Call for Papers' },
       { route: 'callForWorkshops', label: 'Call for Workshops & Tutorials' },
+      { route: 'callForCompetitionSubmissions', label: 'Call for Competition' },
     ],
   },
   // { route: 'program', label: 'Program', icon: iconProgram },
+  { route: 'competition', label: 'Competition', icon: iconChip },
   {
     route: 'organizingCommittee',
     label: 'Committees',
@@ -190,6 +207,17 @@ const submenu: MenuItem[] = [
   { route: 'privacyPolicy', label: 'Privacy Policy' },
   { route: 'disclaimer', label: 'Disclaimer' },
 ];
+
+const eventCaption = computed<string>(() => {
+  if (!event.value) return '';
+  const dates = dateRange(event.value.start_date, event.value.end_date);
+  return `${dates} · ${event.value.city}, ${event.value.country.name}`;
+});
+
+const copyrightYear = computed<number>(() => {
+  if (event.value?.start_date) return new Date(event.value.start_date).getFullYear();
+  return new Date().getFullYear();
+});
 
 const footerText = computed<string>(() => {
   if (!event.value) return '';

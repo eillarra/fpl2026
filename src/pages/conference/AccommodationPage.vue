@@ -12,7 +12,7 @@
   <template v-if="aboutGhentText">
     <q-separator class="q-my-xl" />
     <div>
-      <h4 class="fpl__text-subtitle2">About Ghent</h4>
+      <fpl-subtitle>About Ghent</fpl-subtitle>
       <marked-div :text="aboutGhentText" />
     </div>
   </template>

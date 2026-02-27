@@ -23,16 +23,42 @@
       <fpl-subtitle>Important dates</fpl-subtitle>
       <important-dates-list :dates="importantDates" />
     </div>
+    <div v-if="keynotes.length > 0" class="col-12">
+      <fpl-subtitle>Keynote speakers</fpl-subtitle>
+      <div class="row q-col-gutter-md">
+        <div v-for="keynote in keynotes" :key="keynote.id" class="col-12 col-sm-6 col-md-4">
+          <q-card flat bordered square class="cursor-pointer" @click="openKeynote(keynote)">
+            <q-card-section class="row no-wrap q-col-gutter-md items-center">
+              <div class="col-auto">
+                <avatar-display :file="getKeynoteAvatar(keynote)" size="64px" :alt-text="keynote.speaker" />
+              </div>
+              <div class="col">
+                <div class="text-weight-bold text-wrap-balance">{{ keynote.speaker }}</div>
+                <div v-if="keynote.extra_data?.speaker_affiliation" class="text-caption text-grey-7">
+                  {{ keynote.extra_data.speaker_affiliation }}
+                </div>
+                <div class="text-body2 text-wrap-balance q-mt-xs">{{ keynote.title }}</div>
+              </div>
+            </q-card-section>
+          </q-card>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <keynote-details-dialog v-if="selectedKeynote" ref="keynoteDialog" :keynote="selectedKeynote" hide-button />
 </template>
 
 <script setup lang="ts">
-import { computed, toRefs } from 'vue';
+import { computed, nextTick, onMounted, ref, toRefs } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
 import { dateRange } from '@evan/utils/dates';
+import { getKeynoteAvatar, sortKeynotes } from '@evan/utils/program';
 
+import AvatarDisplay from '@/components/AvatarDisplay.vue';
 import ImportantDatesList from '@/components/ImportantDatesList.vue';
+import KeynoteDetailsDialog from '@/components/program/KeynoteDetailsDialog.vue';
 
 import { iconVenue } from '@/icons';
 
@@ -48,5 +74,20 @@ const ghent = computed<string>(() => {
 const importantDates = computed<ImportantDate[]>(() => {
   if (!event.value) return [];
   return event.value.extra_data.important_dates;
+});
+
+const keynotes = computed<EvanKeynote[]>(() => sortKeynotes(eventStore.keynotes, eventStore.sessions));
+
+const selectedKeynote = ref<EvanKeynote | null>(null);
+const keynoteDialog = ref<{ openDialog: () => void } | null>(null);
+
+async function openKeynote(keynote: EvanKeynote): Promise<void> {
+  selectedKeynote.value = keynote;
+  await nextTick();
+  keynoteDialog.value?.openDialog();
+}
+
+onMounted(() => {
+  void eventStore.fetchProgramData();
 });
 </script>

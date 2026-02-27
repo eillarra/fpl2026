@@ -23,7 +23,7 @@
                     class="q-mb-md nav-avatar"
                   />
                   <div class="text-center">
-                    <div class="fpl__text-subtitle2">{{ item.title }}</div>
+                    <fpl-subtitle>{{ item.title }}</fpl-subtitle>
                   </div>
                 </div>
               </div>

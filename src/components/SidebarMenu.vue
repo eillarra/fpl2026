@@ -44,7 +44,7 @@ import { useRoute } from 'vue-router';
 
 const route = useRoute();
 
-interface MenuItem {
+export interface MenuItem {
   route: string;
   label: string;
   icon?: string;

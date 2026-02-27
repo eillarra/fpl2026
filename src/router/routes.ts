@@ -53,7 +53,19 @@ const routes: RouteRecordRaw[] = [
             strict: true,
             component: () => import('pages/calls/CallForWorkshopsPage.vue'),
           },
+          {
+            path: 'call-for-competition-submissions/',
+            name: 'callForCompetitionSubmissions',
+            strict: true,
+            component: () => import('pages/competition/CallForSubmissionsPage.vue'),
+          },
         ],
+      },
+      {
+        path: '/competition/',
+        name: 'competition',
+        strict: true,
+        component: () => import('pages/competition/CallForSubmissionsPage.vue'),
       },
       {
         path: '/committees/',

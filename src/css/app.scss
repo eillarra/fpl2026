@@ -170,7 +170,7 @@ body {
 
 .fpl__text-headline,
 .fpl__text-title,
-.fpl__text-subtitle2,
+.fpl__text-subtitle,
 .fpl__router-link-menu,
 .text-mono,
 .text-mono-bold,
@@ -188,7 +188,7 @@ samp {
 
 .fpl__text-headline,
 .fpl__text-title,
-.fpl__text-subtitle2 {
+.fpl__text-subtitle {
   line-height: 1.3;
   text-wrap: balance;
 
@@ -197,7 +197,7 @@ samp {
   }
 }
 
-.fpl__text-subtitle2 {
+.fpl__text-subtitle {
   background-color: $fpl-green;
   padding: 0.2em 0.4em;
   display: inline-block;
@@ -224,7 +224,7 @@ samp {
   }
 }
 
-.fpl__text-subtitle2,
+.fpl__text-subtitle,
 .fpl__text-subtitle3 {
   font-size: 1em !important;
 
@@ -233,7 +233,7 @@ samp {
   }
 }
 
-.fpl__text-subtitle2 {
+.fpl__text-subtitle {
   text-transform: uppercase;
 }
 

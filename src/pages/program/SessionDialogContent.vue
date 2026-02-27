@@ -40,7 +40,7 @@
               :class="{ 'q-pa-md': $q.screen.gt.sm }"
             >
               <q-card-section>
-                <h4 class="fpl__text-subtitle2">Location</h4>
+                <fpl-subtitle>Location</fpl-subtitle>
                 <div v-if="getVenueAndRoomInfo.venue" class="q-mb-sm">
                   <div class="text-body1 text-weight-medium">Venue: {{ getVenueAndRoomInfo.venue.name }}</div>
                   <div class="text-h6">Location: {{ getVenueAndRoomInfo.room.name }}</div>
@@ -61,7 +61,7 @@
               :class="{ 'q-pa-md': $q.screen.gt.sm }"
             >
               <q-card-section>
-                <h4 class="fpl__text-subtitle2">Important dates</h4>
+                <fpl-subtitle>Important dates</fpl-subtitle>
                 <ul class="q-ma-none">
                   <li v-for="(date, idx) in importantDates" :key="idx">
                     <span :class="{ 'text-strike': date.is_past }">{{ date.formatted }}: {{ date.label }}</span>
@@ -125,7 +125,7 @@
                 :class="{ 'q-pa-md': $q.screen.gt.sm }"
               >
                 <q-card-section>
-                  <h4 class="fpl__text-subtitle2">Important dates</h4>
+                  <fpl-subtitle>Important dates</fpl-subtitle>
                   <ul class="q-ma-none">
                     <li v-for="(date, idx) in importantDates" :key="idx">
                       <span :class="{ 'text-strike': date.is_past }">{{ date.formatted }}: {{ date.label }}</span>

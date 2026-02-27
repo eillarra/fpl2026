@@ -4,11 +4,7 @@
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
         <div class="col-12 col-md-4 flex column" v-show="$q.screen.gt.xs">
           <fpl-separator label="Accepted Papers" />
-          <h6>
-            All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
-            >: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with their
-            accepted papers, as well as ICS-CSR.
-          </h6>
+          <h6>{{ papersDescription }}</h6>
           <div class="q-mb-lg">
             <proceedings-dialog button-label="Online proceedings" :button-class="{ 'full-width': $q.screen.lt.sm }" />
           </div>
@@ -71,11 +67,7 @@
           </template>
           <q-card v-if="$q.screen.lt.sm" flat bordered square class="q-pa-sm q-mb-md">
             <q-card-section>
-              <h6 class="q-mt-none">
-                All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
-                >: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with
-                their accepted papers, as well as ICS-CSR.
-              </h6>
+              <h6 class="q-mt-none">{{ papersDescription }}</h6>
               <proceedings-dialog button-label="Online proceedings" :button-class="{ 'full-width': $q.screen.lt.sm }" />
             </q-card-section>
           </q-card>
@@ -109,6 +101,12 @@ const selectedDate = inject<{ value: string }>('selectedDate');
 const searchQuery = ref('');
 
 const allPapers = computed(() => eventStore.papers);
+
+const papersDescription = computed(() =>
+  eventStore.event
+    ? `All accepted Papers at ${eventStore.event.name}: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with their accepted papers, as well as ICS-CSR.`
+    : '',
+);
 
 const filteredPapers = computed(() => {
   let papers = allPapers.value;

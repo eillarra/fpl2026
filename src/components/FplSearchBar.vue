@@ -1,7 +1,7 @@
 <template>
   <div>
     <q-input
-      :model-value="searchQuery"
+      :model-value="searchQueryStr"
       @update:model-value="updateSearchQuery"
       outlined
       dense
@@ -73,6 +73,7 @@ const emit = defineEmits<{
 }>();
 
 const { searchQuery } = useSearchQuery(props.queryParam);
+const searchQueryStr = computed<string>(() => searchQuery.value);
 
 // Get available topics from the event store
 const eventStore = useEventStore();
@@ -84,7 +85,7 @@ const availableTopics = computed(() => {
 
 // Emit search events to parent for reactivity
 watch(
-  searchQuery,
+  () => searchQuery.value,
   (newValue) => {
     emit('search', newValue);
   },

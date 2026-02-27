@@ -30,9 +30,10 @@ import {
   symSharpMail,
   symSharpMap,
   symSharpMeetingRoom,
-  symSharpMemory,
+  symSharpMemoryAlt,
   symSharpMenu,
   symSharpNavigation,
+  symSharpCallMade,
   symSharpOpenInNew,
   symSharpPerson,
   symSharpPersonAdd,
@@ -62,7 +63,7 @@ export const iconCalendar = symSharpCalendarMonth;
 export const iconCalendarToday = symSharpCalendarToday;
 export const iconCached = symSharpRefresh;
 export const iconCheck = symSharpCheck;
-export const iconChip = symSharpMemory;
+export const iconChip = symSharpMemoryAlt;
 export const iconClear = symSharpClose;
 export const iconClose = symSharpClose;
 export const iconCode = symSharpCode;
@@ -81,6 +82,7 @@ export const iconInfo = symSharpInfo;
 export const iconKeynote = symSharpCampaign;
 export const iconKeynoteFilled = symSharpCampaign;
 export const iconLink = symSharpLink;
+export const iconLocation = symSharpLocationOn;
 export const iconList = symSharpList;
 export const iconMap = symSharpMap;
 export const iconMenu = symSharpMenu;
@@ -122,6 +124,7 @@ export const iconAttachment = symSharpAttachFile;
 export const iconCategory = symSharpCategory;
 export const iconDescription = symSharpDescription;
 export const iconHourglassEmpty = symSharpHourglassEmpty;
+export const iconExternalLink = symSharpCallMade;
 export const iconOpenInNew = symSharpOpenInNew;
 export const iconRelatedContent = symSharpLayers;
 
