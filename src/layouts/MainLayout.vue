@@ -15,7 +15,7 @@
   <q-layout v-show="_loaded" view="hHh lpr lfr" class="fpl__layout">
     <q-header v-if="$q.screen.lt.md" class="fpl__header bg-white text-dark">
       <q-toolbar class="fpl__toolbar container">
-        <router-link :to="{ name: 'home' }">
+        <router-link :to="{ name: 'home' }" class="block">
           <img src="~assets/fpl-logo.svg" class="fpl__logo" />
         </router-link>
         <q-space />
@@ -31,7 +31,7 @@
           class="q-ml-sm"
         />
         <q-btn
-          outline
+          flat
           round
           v-show="$q.screen.lt.md"
           @click="leftDrawer = !leftDrawer"
@@ -44,22 +44,22 @@
       <q-separator />
     </q-header>
 
-    <!-- Left drawer for mobile only -->
-    <q-drawer v-model="leftDrawer" :width="280" side="left" class="fpl__drawer" overlay :breakpoint="960">
+    <!-- Drawer for mobile -->
+    <q-drawer v-model="leftDrawer" :width="280" side="right" class="bg-fpl-cyan" overlay :breakpoint="960">
       <q-toolbar class="fpl__toolbar">
-        <div class="q-pl-sm q-pt-sm"><img src="~assets/fpl-logo.svg" class="fpl__logo-footer q-ml-xs" /></div>
         <q-space />
         <q-btn
-          outline
+          flat
           round
-          @click="leftDrawer = !leftDrawer"
           :icon="iconClose"
           aria-label="Close navigation menu"
-          class="q-mr-sm"
+          class="q-mx-sm"
+          @click="leftDrawer = false"
         />
       </q-toolbar>
+      <q-separator />
       <div class="q-pa-lg">
-        <sidebar-menu :menu="menu" :submenu="submenu" show-logo @item-click="leftDrawer = false" />
+        <sidebar-menu :menu="menu" :submenu="submenu" @item-click="leftDrawer = false" />
       </div>
     </q-drawer>
 
@@ -77,7 +77,7 @@
             <!-- Main content -->
             <div class="col bg-white q-pt-sm q-pb-xl">
               <router-link
-                v-if="event"
+                v-if="event && $q.screen.gt.sm"
                 :to="{ name: 'venue' }"
                 class="fpl__event-caption row items-center q-mt-md q-mb-xl"
               >
@@ -186,7 +186,12 @@ const menu: MenuItem[] = [
       { route: 'callForCompetitionSubmissions', label: 'Call for Competition' },
     ],
   },
-  // { route: 'program', label: 'Program', icon: iconProgram },
+  {
+    route: 'program',
+    label: 'Program',
+    icon: iconProgram,
+    children: [{ route: 'keynotes', label: 'Keynotes' }],
+  },
   { route: 'competition', label: 'Competition', icon: iconChip },
   {
     route: 'organizingCommittee',

@@ -6,7 +6,7 @@
       <marked-div :text="accommodationText" />
     </div>
     <div v-if="gmapsEmbedUrl" class="col-12 col-md">
-      <q-video :src="gmapsEmbedUrl" :ratio="$q.screen.gt.sm ? 1.6 : 1" />
+      <q-video :src="gmapsEmbedUrl" :ratio="$q.screen.gt.sm ? 1.1 : 1" />
     </div>
   </div>
   <template v-if="aboutGhentText">

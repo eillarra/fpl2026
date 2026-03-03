@@ -19,7 +19,7 @@
       <template v-else>
         <!-- Show keynotes sections or empty state when filtered by day -->
         <div v-if="filteredMainKeynotes.length > 0" class="q-mb-xl">
-          <fpl-separator label="ARES Keynotes" v-show="$q.screen.gt.xs" class="q-mb-md" />
+          <fpl-separator label="FPL Keynotes" v-show="$q.screen.gt.xs" class="q-mb-md" />
           <div class="row q-col-gutter-md" :class="{ 'q-mt-sm': $q.screen.gt.xs }">
             <div v-for="keynote in filteredMainKeynotes" :key="keynote.id" class="col-12 col-md-6">
               <program-card
@@ -29,7 +29,7 @@
                 :speaker-info="getKeynoteSpeakerInfo(keynote)"
                 :location-info="getKeynoteLocation(keynote)"
                 :time-info="getKeynoteTimeInfo(keynote)"
-                category-label="ARES - Keynote"
+                category-label="FPL - Keynote"
                 variant="keynote"
                 @click="openKeynoteDetails(keynote)"
               />

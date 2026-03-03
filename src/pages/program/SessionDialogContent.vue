@@ -1,7 +1,7 @@
 <template>
   <fpl-dialog-content :title="$q.screen.gt.sm ? titles[0] : titles[1]" hide-drawer>
     <template #tabs>
-      <q-tabs v-if="!isSpecialSessionType" v-model="tab" shrink inline-label no-caps>
+      <q-tabs v-if="!isSpecialSessionType && !linkedKeynote" v-model="tab" shrink inline-label no-caps>
         <q-tab v-if="hasProgramContent" name="program" label="Program" />
         <q-tab v-if="hasGeneralInfo" name="info" label="General information" />
         <q-tab v-if="hasCommittees" name="committees" label="Committees" />
@@ -108,6 +108,43 @@
 
             <marked-div :text="session.description" />
           </div>
+        </div>
+      </div>
+
+      <!-- Pattern B: standalone keynote session — show keynote content directly -->
+      <div v-else-if="linkedKeynote" class="q-px-lg q-pb-xl">
+        <div v-if="linkedKeynote.speaker" class="q-mb-md">
+          <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker</div>
+          <div class="row items-start q-col-gutter-lg q-mb-lg">
+            <div class="col-shrink">
+              <avatar-display :file="getKeynoteAvatar(linkedKeynote)" size="128px" :alt-text="linkedKeynote.speaker" />
+            </div>
+            <div class="col">
+              <p class="q-mb-none text-wrap-balance">
+                <strong>{{ linkedKeynote.speaker }}</strong>
+                <span v-if="linkedKeynote.extra_data?.speaker_affiliation" class="text-grey-8">
+                  <br />{{ linkedKeynote.extra_data.speaker_affiliation }}
+                </span>
+              </p>
+            </div>
+            <div v-if="linkedKeynote.extra_data?.speaker_website" class="col-auto">
+              <fpl-btn
+                :href="linkedKeynote.extra_data.speaker_website"
+                target="_blank"
+                :icon="iconOpenInNew"
+                label="Visit website"
+                size="md"
+              />
+            </div>
+          </div>
+        </div>
+        <div v-if="linkedKeynote.abstract" class="q-mb-lg">
+          <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
+          <marked-div :text="linkedKeynote.abstract" />
+        </div>
+        <div v-if="linkedKeynote.bio" class="q-mb-lg">
+          <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker Bio</div>
+          <marked-div :text="linkedKeynote.bio" />
         </div>
       </div>
 
@@ -250,10 +287,13 @@ import {
 
 import MarkedDiv from '@evan/components/MarkedDiv.vue';
 import FplDialogContent from '@/components/FplDialogContent.vue';
+import AvatarDisplay from '@/components/AvatarDisplay.vue';
 import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
 import ProgramMarkedDiv from '@/components/program/ProgramMarkedDiv.vue';
 
-import { iconEmail, iconPerson } from '@/icons';
+import { getKeynoteAvatar } from '@/utils/program';
+
+import { iconEmail, iconOpenInNew, iconPerson } from '@/icons';
 
 const $q = useQuasar();
 const eventStore = useEventStore();
@@ -320,27 +360,39 @@ const isSpecialSessionType = computed(() => {
   return sessionType.value === 'social' || sessionType.value === 'catering';
 });
 
+// Pattern B: find a keynote directly linked to this session (no subsession)
+const linkedKeynote = computed(() => {
+  if (hasProgramContent.value || hasGeneralInfo.value) return null;
+  return eventStore.keynotes.find((k) => k.session === props.session.id && !k.subsession) ?? null;
+});
+
 const hasSubsessions = computed(() => {
   return props.session.subsessions && props.session.subsessions.length > 0;
 });
 
+// '[superseded]' is a sentinel used in Evan admin to indicate the session-level
+// content is intentionally empty because the keynote object is the authoritative
+// source (Pattern B: standalone keynote session). Treat it as empty.
+const isSuperseded = (text: string | null | undefined): boolean =>
+  !text || text.trim() === '' || text.trim() === '[superseded]';
+
 const hasProgramContent = computed(() => {
   if (!props.session) return false;
-
   const hasSubsessions = props.session.subsessions && props.session.subsessions.length > 0;
-  const hasProgram = props.session.program && props.session.program.trim() !== '';
-
+  const hasProgram = !isSuperseded(props.session.program);
   return hasSubsessions || hasProgram;
 });
 
 const hasGeneralInfo = computed(() => {
   if (!props.session) return false;
-  return props.session.description && props.session.description.trim() !== '';
+  return !isSuperseded(props.session.description);
 });
 
 const titles = computed<[string, string]>(() => {
   const tracks = eventStore.event?.tracks || [];
-  return props.session.track == 53
+  const track = tracks.find((t) => t.id === props.session.track);
+  const isKeynoteTrack = track?.name.toLowerCase() === 'keynotes';
+  return isKeynoteTrack
     ? [props.session.title, 'Keynote']
     : [getSessionDisplayTitle(props.session, tracks), props.session.code || props.session.title];
 });

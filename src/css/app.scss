@@ -70,8 +70,22 @@ $separator-color: #343c3f !default;
 
 /* Layout */
 
+html {
+  scrollbar-gutter: stable;
+}
+
 body {
   background-color: $fpl-blue;
+}
+
+// Quasar's default prevent-scroll uses position:fixed which breaks position:sticky.
+// On desktop (pointer: fine) we override it to use overflow:hidden instead,
+// which stops scrolling without detaching sticky elements from their scroll context.
+@media (pointer: fine) {
+  body.q-body--prevent-scroll {
+    position: static !important;
+    overflow: hidden;
+  }
 }
 
 .fpl__layout {
@@ -98,54 +112,7 @@ body {
     }
   }
 
-  .fpl__drawer {
-    .q-item {
-      padding: 0.5rem 0.1rem;
-    }
-
-    .q-item__section--avatar {
-      padding-right: 0.5rem;
-      min-width: 24px;
-    }
-  }
-
-  .fpl__desktop-layout {
-    padding-top: 2rem !important;
-  }
-
-  .fpl__sidebar {
-    .q-item {
-      padding: 0.5rem 0.1rem;
-    }
-
-    .q-item__section--avatar {
-      padding-right: 0.5rem;
-      min-width: 24px;
-    }
-  }
-
   .fpl__sidebar-list {
-    .q-item__section--side > .q-icon {
-      margin-top: 0.25em;
-      font-size: 1em;
-    }
-
-    .q-router-link--exact-active {
-      color: inherit;
-
-      .q-router-link--exact-active .main-label {
-        font-weight: bold !important;
-      }
-    }
-  }
-
-  .fpl__sidebar-fixed {
-    position: sticky;
-    top: 3em;
-    align-self: flex-start;
-    max-height: calc(100vh);
-    overflow-y: auto;
-
     .q-item {
       padding: 0.25rem 0.5rem;
       margin-left: -0.5rem;
@@ -155,6 +122,27 @@ body {
       padding-right: 0.5rem;
       min-width: 24px;
     }
+
+    .q-item__section--side > .q-icon {
+      margin-top: 0.25em;
+      font-size: 1em;
+    }
+
+    .q-router-link--exact-active {
+      color: inherit;
+    }
+  }
+
+  .fpl__desktop-layout {
+    padding-top: 2rem !important;
+  }
+
+  .fpl__sidebar-fixed {
+    position: sticky;
+    top: 3em;
+    align-self: flex-start;
+    max-height: calc(100vh);
+    overflow-y: auto;
   }
 }
 
@@ -381,7 +369,12 @@ a {
 /* Images */
 
 .fpl__logo {
-  height: 72px;
+  display: block;
+  height: 48px;
+
+  @media (min-width: 1024px) {
+    height: 72px;
+  }
 }
 
 .fpl__logo-footer {
