@@ -44,6 +44,9 @@
         </div>
       </div>
     </div>
+    <div v-if="eventStore.contentsDict['disclaimer_cps']" class="col-12 q-mt-xl">
+      <marked-div class="text-body2 text-grey-8" :text="eventStore.contentsDict['disclaimer_cps']?.value" />
+    </div>
   </div>
 
   <keynote-details-dialog v-if="selectedKeynote" ref="keynoteDialog" :keynote="selectedKeynote" hide-button />
