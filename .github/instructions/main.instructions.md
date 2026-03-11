@@ -49,3 +49,13 @@ Feel free to add relevant documents to the knowledge base for future reference. 
 - **Naming**: Use descriptive names like `avatar_system.md`, not `fix_avatar_bug.md`
 - **Content**: Focus on "why" and "how it works", not "what I did"
 - **Cleanup**: If a document becomes obsolete (feature removed, pattern abandoned), delete it
+
+## Error monitoring (Sentry)
+
+You have access to the Sentry MCP server. Use it to investigate errors proactively when debugging issues.
+
+- **`organizationSlug`**: `ea06`
+- **`projectSlugOrId`**: `fpl2026`
+- **`regionUrl`**: `https://de.sentry.io`
+
+When resolving issues, prefer **`resolvedInNextRelease`** over `resolved` — this signals the fix is in the next deployment rather than already live.
