@@ -2,8 +2,10 @@
 .thumbs.db
 node_modules
 
-# Copilot helper files
+# Coding helper files
 .copilot
+.github/instructions
+.vscode
 
 # Quasar core related directories
 .quasar

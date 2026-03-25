@@ -4971,7 +4971,7 @@ __metadata:
 
 "evan-kit@file:./evan-kit::locator=org.fpl.2026%40workspace%3A.":
   version: 0.1.0
-  resolution: "evan-kit@file:./evan-kit#./evan-kit::hash=0750d1&locator=org.fpl.2026%40workspace%3A."
+  resolution: "evan-kit@file:./evan-kit#./evan-kit::hash=973199&locator=org.fpl.2026%40workspace%3A."
   dependencies:
     date-fns: "npm:^3.0.0"
     date-fns-tz: "npm:^3.2.0"
@@ -4983,7 +4983,7 @@ __metadata:
     vue-router: ^4.4.0
   bin:
     evan-archive: ./bin/archive.js
-  checksum: 10c0/47bdb16a5edadb46fe26de9c9de9f06274b0af2c57f3bbacd6d1bfff2d8e4967e28c52d357e07b8d1fecff7c54c083186dc73c61f7abce989379b4609a59bcbe
+  checksum: 10c0/4e3c7d6fc97e130cbd4e411403806f9d857c1c307671f41019e97e9fd1a69017114264988f67c4d1f6aa6a5630436cc4af4fed004fc7a68250d5cd3c320dec96
   languageName: node
   linkType: hard
 
@@ -7083,7 +7083,7 @@ __metadata:
     prettier: "npm:^3.8.1"
     quasar: "npm:^2.19.1"
     register-service-worker: "npm:^1.7.2"
-    typescript: "npm:^5.0.0"
+    typescript: "npm:^5.9.3"
     vite-plugin-checker: "npm:^0.12.0"
     vue: "npm:^3.5.31"
     vue-eslint-parser: "npm:^10.4.0"
@@ -8999,7 +8999,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.0.0":
+"typescript@npm:^5.9.3":
   version: 5.9.3
   resolution: "typescript@npm:5.9.3"
   bin:
@@ -9009,7 +9009,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^5.0.0#optional!builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^5.9.3#optional!builtin<compat/typescript>":
   version: 5.9.3
   resolution: "typescript@patch:typescript@npm%3A5.9.3#optional!builtin<compat/typescript>::version=5.9.3&hash=5786d5"
   bin:

@@ -19,7 +19,7 @@
         class="full-width q-mb-xl"
       />
     </div>
-    <div v-if="importantDates.length > 0" class="col-12">
+    <div v-if="importantDates.length > 0" class="col-12 q-my-lg">
       <fpl-subtitle>Important dates</fpl-subtitle>
       <important-dates-list :dates="importantDates" />
     </div>
