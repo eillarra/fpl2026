@@ -164,6 +164,7 @@ import {
   iconProgram,
   iconRegister,
   iconSend,
+  iconSponsors,
   iconVenue,
 } from '@/icons';
 
@@ -201,6 +202,15 @@ const menu: MenuItem[] = [
       { route: 'organizingCommittee', label: 'Organizing Committee' },
       { route: 'programCommittee', label: 'Program Committee' },
       { route: 'steeringCommittee', label: 'Steering Committee' },
+    ],
+  },
+  {
+    route: 'sponsors',
+    label: 'Sponsorship',
+    icon: iconSponsors,
+    children: [
+      { route: 'callForSponsorship', label: 'Call for Sponsorship' },
+      { route: 'sponsors', label: 'Sponsors' },
     ],
   },
   { route: 'venue', label: 'Venue and location', icon: iconVenue },

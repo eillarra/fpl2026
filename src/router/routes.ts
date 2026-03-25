@@ -105,6 +105,31 @@ const routes: RouteRecordRaw[] = [
         component: () => import('pages/conference/PresenterInfoPage.vue'),
       },
       {
+        path: '/sponsorship/',
+        children: [
+          {
+            path: '',
+            name: 'sponsorship',
+            strict: true,
+            redirect: {
+              name: 'sponsors',
+            },
+          },
+          {
+            path: 'call/',
+            name: 'callForSponsorship',
+            strict: true,
+            component: () => import('pages/sponsorship/CallForSponsorshipPage.vue'),
+          },
+          {
+            path: 'sponsors/',
+            name: 'sponsors',
+            strict: true,
+            component: () => import('pages/sponsorship/SponsorsPage.vue'),
+          },
+        ],
+      },
+      {
         path: '/contact/',
         name: 'contact',
         strict: true,

@@ -21,6 +21,7 @@ import {
   symSharpFlashOff,
   symSharpGridView,
   symSharpGroup,
+  symSharpHandshake,
   symSharpHourglassEmpty,
   symSharpInfo,
   symSharpLayers,
@@ -102,6 +103,7 @@ export const iconRoom = symSharpMeetingRoom;
 export const iconSchedule = symSharpSchedule;
 export const iconSearch = symSharpSearch;
 export const iconSend = symSharpSend;
+export const iconSponsors = symSharpHandshake;
 export const iconSession = symSharpPresentToAll;
 export const iconSettings = symSharpSettings;
 export const iconShare = symSharpShare;

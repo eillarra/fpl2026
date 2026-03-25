@@ -30,6 +30,7 @@ declare global {
   type EvanRoom = EvanTypes.EvanRoom;
 
   type EvanFile = EvanTypes.EvanFile;
+  type EvanSponsor = EvanTypes.EvanSponsor;
   type EvanContent = EvanTypes.EvanContent;
 }
 

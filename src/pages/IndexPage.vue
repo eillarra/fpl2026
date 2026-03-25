@@ -44,11 +44,21 @@
         </div>
       </div>
     </div>
+    <div v-if="sponsors.length > 0" class="col-12 q-mt-xl">
+      <fpl-subtitle>Sponsors</fpl-subtitle>
+      <div class="row q-col-gutter-y-md q-col-gutter-x-xl items-center">
+        <div v-for="sponsor in sponsors" :key="sponsor.id" class="col-auto">
+          <a :href="sponsor.website" target="_blank" rel="noopener noreferrer" :aria-label="sponsor.name">
+            <img v-if="sponsor.files[0]" :src="sponsor.files[0].file" :alt="sponsor.name" class="fpl__sponsor-logo" />
+            <span v-else class="text-body2 text-weight-bold">{{ sponsor.name }}</span>
+          </a>
+        </div>
+      </div>
+    </div>
     <div v-if="eventStore.contentsDict['disclaimer_cps']" class="col-12 q-mt-xl">
       <marked-div class="text-body2 text-grey-8" :text="eventStore.contentsDict['disclaimer_cps']?.value" />
     </div>
   </div>
-
   <keynote-details-dialog v-if="selectedKeynote" ref="keynoteDialog" :keynote="selectedKeynote" hide-button />
 </template>
 
@@ -67,7 +77,7 @@ import { iconVenue } from '@/icons';
 
 const eventStore = useEventStore();
 
-const { event } = toRefs(eventStore);
+const { event, sponsors } = toRefs(eventStore);
 
 const ghent = computed<string>(() => {
   if (!event.value) return '';
