@@ -59,7 +59,7 @@ const { contentsDict } = toRefs(eventStore);
 const callText = computed<MarkdownText | null>(() => contentsDict.value['competition.challenge']?.value || null);
 
 const contestDates: ImportantDate[] = [
-  { label: 'Registration Deadline', format: 'date', start_date: '2026-03-23', end_date: null, aoe: true },
+  { label: 'Registration Deadline', format: 'date', start_date: '2026-04-03', end_date: null, aoe: true },
   { label: 'Alpha Submission', format: 'date', start_date: '2026-05-05', end_date: null, aoe: true },
   { label: 'Beta Submission', format: 'date', start_date: '2026-07-13', end_date: null, aoe: true },
   { label: 'Final Submission', format: 'date', start_date: '2026-08-10', end_date: null, aoe: true },
