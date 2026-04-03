@@ -20,19 +20,19 @@
   },
   "dependencies": {
     "@quasar/extras": "^1.17.0",
-    "@sentry/vue": "^10.45.0",
+    "@sentry/vue": "^10.47.0",
     "evan-kit": "file:./evan-kit",
     "pinia": "^3.0.4",
-    "quasar": "^2.19.1",
+    "quasar": "^2.19.2",
     "register-service-worker": "^1.7.2",
-    "vue": "^3.5.31",
+    "vue": "^3.5.32",
     "vue-router": "^5.0.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@quasar/app-vite": "^2.5.4",
     "@types/node": "^24",
-    "@types/web": "^0.0.344",
+    "@types/web": "^0.0.345",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.7.0",
     "autoprefixer": "^10.4.27",

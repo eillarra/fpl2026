@@ -9,7 +9,13 @@
         <div class="row q-col-gutter-xl items-center">
           <div v-for="sponsor in sponsorsByLevel[tierIndex]" :key="sponsor.id" class="col-auto">
             <a :href="sponsor.website" target="_blank" rel="noopener noreferrer" :aria-label="sponsor.name">
-              <img v-if="sponsor.files[0]" :src="sponsor.files[0].file" :alt="sponsor.name" class="fpl__sponsor-logo" />
+              <img
+                v-if="sponsor.files[0]"
+                :src="sponsor.files[0].file"
+                :alt="sponsor.name"
+                :title="sponsor.name"
+                class="fpl__sponsor-logo"
+              />
               <span v-else class="text-body1 text-weight-bold">{{ sponsor.name }}</span>
             </a>
           </div>
@@ -21,7 +27,13 @@
   <div v-else class="row q-col-gutter-xl items-center q-mt-xl">
     <div v-for="sponsor in sponsors" :key="sponsor.id" class="col-auto">
       <a :href="sponsor.website" target="_blank" rel="noopener noreferrer" :aria-label="sponsor.name">
-        <img v-if="sponsor.files[0]" :src="sponsor.files[0].file" :alt="sponsor.name" class="fpl__sponsor-logo" />
+        <img
+          v-if="sponsor.files[0]"
+          :src="sponsor.files[0].file"
+          :alt="sponsor.name"
+          :title="sponsor.name"
+          class="fpl__sponsor-logo"
+        />
         <span v-else class="text-body1 text-weight-bold">{{ sponsor.name }}</span>
       </a>
     </div>

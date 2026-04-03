@@ -26,7 +26,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 
-import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
+import { format, formatImportantDate, passedImportantDate } from '@evan/utils/dates';
 
 interface ProcessedDate extends ImportantDate {
   formatted: string;
@@ -35,13 +35,16 @@ interface ProcessedDate extends ImportantDate {
 
 const props = defineProps<{
   dates: ImportantDate[];
+  showTimes?: boolean;
 }>();
 
 const processedDates = computed<ProcessedDate[]>(() => {
   return props.dates.map((date) => ({
     ...date,
     label: date.aoe ? `${date.label} (AoE)` : date.label,
-    formatted: formatImportantDate(date, date.aoe),
+    formatted: props.showTimes
+      ? format(date.start_date, "d MMM yyyy '·' HH:mm (O)")
+      : formatImportantDate(date, date.aoe),
     is_past: passedImportantDate(date),
   }));
 });

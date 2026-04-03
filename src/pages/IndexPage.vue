@@ -1,23 +1,32 @@
 <template>
   <div class="row q-col-gutter-y-lg">
-    <div class="col-12 col-md-9">
-      <div :class="{ 'q-pr-xl ': $q.screen.gt.sm }">
-        <h4 class="text-mono q-my-none">
-          <strong>{{ event?.name }}</strong>
-        </h4>
-        <h3 class="fpl__text-headline">{{ event?.full_name }}</h3>
-        <marked-div v-if="event" :text="event.presentation" />
+    <div class="col-12 col-md-12">
+      <h4 class="text-mono q-my-none">
+        <strong>{{ event?.name }}</strong>
+      </h4>
+      <h3 class="fpl__text-headline">{{ event?.full_name }}</h3>
+      <div class="row q-col-gutter-md q-mb-none">
+        <div class="col-6 col-md-auto">
+          <fpl-btn
+            :icon="iconVenue"
+            label="More information"
+            type="router-link"
+            :to="{ name: 'venue' }"
+            class="full-width q-mb-md"
+          />
+        </div>
+        <div class="col-6 col-md-auto">
+          <fpl-btn
+            v-if="event?.is_open_for_registration"
+            :icon="iconRegistration"
+            label="Register now"
+            type="router-link"
+            :to="{ name: 'registration' }"
+            class="full-width q-mb-xl"
+          />
+        </div>
       </div>
-    </div>
-    <div class="col-12 col-md">
-      <p class="text-mono text-body2 bg-fpl-green q-pa-md">{{ ghent }}</p>
-      <fpl-btn
-        :icon="iconVenue"
-        label="More information"
-        type="router-link"
-        :to="{ name: 'venue' }"
-        class="full-width q-mb-xl"
-      />
+      <marked-div v-if="event" :text="event.presentation" />
     </div>
     <div v-if="importantDates.length > 0" class="col-12 q-my-lg">
       <fpl-subtitle>Important dates</fpl-subtitle>
@@ -26,8 +35,8 @@
     <div v-if="keynotes.length > 0" class="col-12">
       <fpl-subtitle>Keynote speakers</fpl-subtitle>
       <div class="row q-col-gutter-md">
-        <div v-for="keynote in keynotes" :key="keynote.id" class="col-12 col-sm-6 col-md-4">
-          <q-card flat bordered square class="cursor-pointer" @click="openKeynote(keynote)">
+        <div v-for="keynote in keynotes" :key="keynote.id" class="col-12">
+          <q-card flat bordered square class="cursor-pointer fpl-hover-lift" @click="openKeynote(keynote)">
             <q-card-section class="row no-wrap q-col-gutter-md items-center">
               <div class="col-auto">
                 <avatar-display :file="getKeynoteAvatar(keynote)" size="64px" :alt-text="keynote.speaker" />
@@ -46,10 +55,16 @@
     </div>
     <div v-if="sponsors.length > 0" class="col-12 q-mt-xl">
       <fpl-subtitle>Sponsors</fpl-subtitle>
-      <div class="row q-col-gutter-y-md q-col-gutter-x-xl items-center">
+      <div class="row q-mt-none q-col-gutter-y-xl q-col-gutter-x-xl items-center">
         <div v-for="sponsor in sponsors" :key="sponsor.id" class="col-auto">
           <a :href="sponsor.website" target="_blank" rel="noopener noreferrer" :aria-label="sponsor.name">
-            <img v-if="sponsor.files[0]" :src="sponsor.files[0].file" :alt="sponsor.name" class="fpl__sponsor-logo" />
+            <img
+              v-if="sponsor.files[0]"
+              :src="sponsor.files[0].file"
+              :alt="sponsor.name"
+              :title="sponsor.name"
+              class="fpl__sponsor-logo"
+            />
             <span v-else class="text-body2 text-weight-bold">{{ sponsor.name }}</span>
           </a>
         </div>
@@ -66,23 +81,17 @@
 import { computed, nextTick, onMounted, ref, toRefs } from 'vue';
 
 import { useEventStore } from '@evan/stores/event';
-import { dateRange } from '@evan/utils/dates';
 import { getKeynoteAvatar, sortKeynotes } from '@evan/utils/program';
 
 import AvatarDisplay from '@/components/AvatarDisplay.vue';
 import ImportantDatesList from '@/components/ImportantDatesList.vue';
 import KeynoteDetailsDialog from '@/components/program/KeynoteDetailsDialog.vue';
 
-import { iconVenue } from '@/icons';
+import { iconRegistration, iconVenue } from '@/icons';
 
 const eventStore = useEventStore();
 
 const { event, sponsors } = toRefs(eventStore);
-
-const ghent = computed<string>(() => {
-  if (!event.value) return '';
-  return `${event.value.city}, ${event.value.country.name}, ${dateRange(event.value.start_date, event.value.end_date)}`;
-});
 
 const importantDates = computed<ImportantDate[]>(() => {
   if (!event.value) return [];

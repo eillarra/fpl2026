@@ -18,7 +18,7 @@
           Registration deadline:<br /><strong>{{ format(event.registration_deadline, 'PPPPpppp') }}.</strong>
         </template>
       </h6>
-      <div class="q-mb-lg">
+      <div class="q-mb-xl">
         <fpl-btn
           :icon="iconRegistration"
           label="Register now via UGent"
@@ -26,7 +26,6 @@
           :href="event.registration_url"
           target="_blank"
           rel="noopener noreferrer"
-          class="fpl__bg-green"
           :class="{ 'full-width': $q.screen.lt.sm }"
         />
       </div>
@@ -37,29 +36,11 @@
     <marked-div v-if="registrationText" :text="registrationText" class="q-mt-md q-mb-lg" />
     <template v-if="registrationDates.length">
       <fpl-subtitle>Key dates</fpl-subtitle>
-      <q-list separator class="text-body2 q-mb-lg">
-        <q-item
-          v-for="(date, idx) in registrationDates"
-          :key="idx"
-          :class="{ 'text-grey-8': passedImportantDate(date) }"
-        >
-          <q-item-section :class="{ 'text-decoration-line-through': passedImportantDate(date) }">
-            <q-item-label>{{ date.label }}</q-item-label>
-          </q-item-section>
-          <q-item-section side>
-            <q-item-label
-              :class="passedImportantDate(date) ? 'text-grey-8' : 'text-fpl-blue'"
-              class="text-weight-medium"
-            >
-              {{ format(date.start_date, "d MMM yyyy '·' HH:mm (O)") }}
-            </q-item-label>
-          </q-item-section>
-        </q-item>
-      </q-list>
+      <important-dates-list :dates="registrationDates" show-times class="q-mb-lg" />
     </template>
     <fpl-subtitle>Registration fees</fpl-subtitle>
     <template v-if="event.fees.length">
-      <q-markup-table flat>
+      <q-markup-table flat class="fpl__q-table">
         <thead>
           <tr class="text-weight-bold">
             <th class="text-left">Fee</th>
@@ -69,7 +50,7 @@
             <th>Social events</th>
           </tr>
         </thead>
-        <tbody class="text-body1">
+        <tbody class="text-body2">
           <tr v-for="fee in event.fees" :key="fee.type">
             <td>{{ fee.notes }}</td>
             <td class="text-center">{{ fee.early_value != null ? `€ ${fee.early_value}` : '—' }}</td>
@@ -134,8 +115,9 @@ import { computed, onMounted, toRefs } from 'vue';
 import { useMeta } from 'quasar';
 
 import { useEventStore } from '@evan/stores/event';
-import { format, passedImportantDate } from '@evan/utils/dates';
+import { format } from '@evan/utils/dates';
 
+import ImportantDatesList from '@/components/ImportantDatesList.vue';
 import { iconRegistration } from '@/icons';
 
 const eventStore = useEventStore();

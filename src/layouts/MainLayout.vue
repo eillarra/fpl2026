@@ -2,7 +2,7 @@
 .fpl__event-caption {
   text-decoration: none;
   color: inherit;
-  opacity: 0.6;
+  opacity: 0.75;
   transition: opacity 0.15s;
 }
 
@@ -19,7 +19,22 @@
           <img src="~assets/fpl-logo.svg" class="fpl__logo" />
         </router-link>
         <q-space />
-        <fpl-btn :icon="iconProgram" label="Program" type="router-link" :to="{ name: 'program' }" class="q-ml-xl" />
+        <fpl-btn
+          v-if="showRegisterOnMobile"
+          :icon="iconRegistration"
+          label="Register"
+          type="router-link"
+          :to="{ name: 'registration' }"
+          class="q-ml-xl"
+        />
+        <fpl-btn
+          v-else
+          :icon="iconProgram"
+          label="Program"
+          type="router-link"
+          :to="{ name: 'program' }"
+          class="q-ml-xl"
+        />
         <!-- PWA Install Button -->
         <q-btn
           v-if="pwaInstall.isInstallable.value"
@@ -75,16 +90,24 @@
             </div>
 
             <!-- Main content -->
-            <div class="col bg-white q-pt-sm q-pb-xl">
-              <router-link
+            <div class="col bg-white q-pb-xl" :class="$q.screen.gt.sm ? 'q-pt-sm' : 'q-pt-md'">
+              <div
                 v-if="event && $q.screen.gt.sm"
-                :to="{ name: 'venue' }"
-                class="fpl__event-caption row items-center q-mt-md q-mb-xl"
+                class="row items-center justify-between q-mt-md q-mb-xl text-inherit"
               >
-                <span class="text-caption"
-                  ><strong class="text-mono">{{ event.name }}</strong> &middot; {{ eventCaption }}</span
+                <router-link :to="{ name: 'venue' }" class="fpl__event-caption row items-center">
+                  <span class="text-caption"
+                    ><strong class="text-mono">{{ event.name }}</strong> &middot; {{ eventCaption }}</span
+                  >
+                </router-link>
+                <router-link
+                  v-if="event.is_open_for_registration"
+                  :to="{ name: 'registration' }"
+                  class="text-primary text-caption text-weight-bold q-mr-xl"
                 >
-              </router-link>
+                  + Register
+                </router-link>
+              </div>
               <div :class="$q.screen.gt.sm ? 'q-pr-xl' : ''">
                 <router-view />
               </div>
@@ -163,6 +186,7 @@ import {
   iconMenu,
   iconProgram,
   iconRegister,
+  iconRegistration,
   iconSend,
   iconSponsors,
   iconVenue,
@@ -174,7 +198,8 @@ const pwaInstall = usePWAInstall();
 const { _loaded, event, contentsDict } = toRefs(eventStore);
 
 const leftDrawer = ref<boolean>(false);
-const menu: MenuItem[] = [
+
+const baseMenu: MenuItem[] = [
   { route: 'home', label: 'Home', icon: iconHome },
   {
     route: 'callForPapers',
@@ -216,12 +241,31 @@ const menu: MenuItem[] = [
   { route: 'venue', label: 'Venue and location', icon: iconVenue },
   { route: 'accommodation', label: 'Accommodation', icon: iconAccommodation },
 ];
-const submenu: MenuItem[] = [
-  { route: 'registration', label: 'Registration', icon: iconRegister },
-  { route: 'contact', label: 'Contact' },
-  { route: 'privacyPolicy', label: 'Privacy Policy' },
-  { route: 'disclaimer', label: 'Disclaimer' },
-];
+
+const menu = computed<MenuItem[]>(() => {
+  if (!event.value?.is_open_for_registration) return baseMenu;
+  const [home, ...rest] = baseMenu;
+  return [home, { route: 'registration', label: 'Registration', icon: iconRegistration }, ...rest];
+});
+
+const submenu = computed<MenuItem[]>(() => {
+  const items: MenuItem[] = [
+    { route: 'contact', label: 'Contact' },
+    { route: 'privacyPolicy', label: 'Privacy Policy' },
+    { route: 'disclaimer', label: 'Disclaimer' },
+  ];
+  if (!event.value?.is_open_for_registration) {
+    items.unshift({ route: 'registration', label: 'Registration', icon: iconRegister });
+  }
+  return items;
+});
+
+const showRegisterOnMobile = computed<boolean>(() => {
+  if (!event.value?.is_open_for_registration) return false;
+  const twoDaysBefore = new Date(event.value.start_date);
+  twoDaysBefore.setDate(twoDaysBefore.getDate() - 2);
+  return new Date() < twoDaysBefore;
+});
 
 const eventCaption = computed<string>(() => {
   if (!event.value) return '';
