@@ -6,8 +6,11 @@
       <marked-div :text="accommodationText" />
     </div>
     <div v-if="gmapsEmbedUrl" class="col-12 col-md">
-      <q-video :src="gmapsEmbedUrl" :ratio="$q.screen.gt.sm ? 1.1 : 1" />
+      <q-video :src="gmapsEmbedUrl" :ratio="1" />
     </div>
+  </div>
+  <div v-if="accommodationDiscountsText" class="q-my-xl text-body2">
+    <marked-div :text="accommodationDiscountsText" />
   </div>
   <template v-if="aboutGhentText">
     <q-separator class="q-my-xl" />
@@ -29,6 +32,9 @@ const eventStore = useEventStore();
 const { contentsDict } = toRefs(eventStore);
 
 const accommodationText = computed<MarkdownText | null>(() => contentsDict.value['accommodation']?.value || null);
+const accommodationDiscountsText = computed<MarkdownText | null>(
+  () => contentsDict.value['accommodation.discounts']?.value || null,
+);
 
 const aboutGhentText = computed<MarkdownText | null>(() => contentsDict.value['ghent.about']?.value || null);
 
