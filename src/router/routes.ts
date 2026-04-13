@@ -32,7 +32,7 @@ const routes: RouteRecordRaw[] = [
             name: 'calls',
             strict: true,
             redirect: {
-              name: 'callForPapers',
+              name: 'callForWorkshops',
             },
           },
           {
@@ -48,10 +48,34 @@ const routes: RouteRecordRaw[] = [
             component: () => import('pages/calls/CallForPapersJournalPage.vue'),
           },
           {
+            path: 'call-for-phd-forum/',
+            name: 'callForPhDForum',
+            strict: true,
+            component: () => import('pages/calls/CallForPhDForumPage.vue'),
+          },
+          {
+            path: 'call-for-demo-night/',
+            name: 'callForDemoNight',
+            strict: true,
+            component: () => import('pages/calls/CallForDemoNightPage.vue'),
+          },
+          {
             path: 'call-for-workshops/',
             name: 'callForWorkshops',
             strict: true,
             component: () => import('pages/calls/CallForWorkshopsPage.vue'),
+          },
+          {
+            path: 'call-for-collaborative-projects/',
+            name: 'callForCollaborativeProjects',
+            strict: true,
+            component: () => import('pages/calls/CallForCollaborativeProjectsPage.vue'),
+          },
+          {
+            path: 'call-for-industrial-event/',
+            name: 'callForIndustrialEvent',
+            strict: true,
+            component: () => import('pages/calls/CallForIndustrialEventPage.vue'),
           },
           {
             path: 'call-for-competition-submissions/',

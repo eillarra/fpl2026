@@ -202,13 +202,15 @@ const leftDrawer = ref<boolean>(false);
 const baseMenu: MenuItem[] = [
   { route: 'home', label: 'Home', icon: iconHome },
   {
-    route: 'callForPapers',
-    label: 'Calls',
+    route: 'callForWorkshops',
+    label: 'Open calls',
     icon: iconSend,
     children: [
-      { route: 'callForPapersJournal', label: 'Call for Papers: Journal Track' },
-      { route: 'callForPapers', label: 'Call for Papers' },
       { route: 'callForWorkshops', label: 'Call for Workshops & Tutorials' },
+      { route: 'callForPhDForum', label: 'Call for PhD Forum' },
+      { route: 'callForDemoNight', label: 'Call for Demo Night' },
+      { route: 'callForCollaborativeProjects', label: 'Call for Collaborative Projects' },
+      { route: 'callForIndustrialEvent', label: 'Call for Industrial Event' },
       { route: 'callForCompetitionSubmissions', label: 'Call for Competition' },
     ],
   },
@@ -240,6 +242,16 @@ const baseMenu: MenuItem[] = [
   },
   { route: 'venue', label: 'Venue and location', icon: iconVenue },
   { route: 'accommodation', label: 'Accommodation', icon: iconAccommodation },
+  { separator: true, label: 'Closed calls separator' },
+  {
+    route: 'callForPapers',
+    label: 'Closed calls',
+    icon: iconSend,
+    children: [
+      { route: 'callForPapers', label: 'Call for Papers' },
+      { route: 'callForPapersJournal', label: 'Call for Papers: Journal Track' },
+    ],
+  },
 ];
 
 const menu = computed<MenuItem[]>(() => {
