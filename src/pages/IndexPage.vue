@@ -28,6 +28,14 @@
       </div>
       <marked-div v-if="event" :text="event.presentation" />
     </div>
+    <div class="col-12 q-mb-lg">
+      <q-parallax v-if="$q.screen.gt.xs" :height="300" :speed="0.3">
+        <template #media>
+          <img src="/images/VisitReeks18-DT004675.jpg" class="full-width" />
+        </template>
+      </q-parallax>
+      <q-img v-else :ratio="2 / 1" src="/images/VisitReeks18-DT004675.jpg" />
+    </div>
     <div v-if="importantDates.length > 0" class="col-12 q-my-lg">
       <fpl-subtitle>Important dates</fpl-subtitle>
       <important-dates-list :dates="importantDates" />
