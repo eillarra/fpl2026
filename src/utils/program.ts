@@ -7,7 +7,6 @@ export {
   createTimeSlots,
   getSessionsByDate,
   groupSessionsByDay,
-  groupSessionsByDayAdvanced,
   getTrackName,
   getTopicName,
   getRoomName,
@@ -26,6 +25,7 @@ import {
   formatProgramTime as _formatProgramTime,
   createDayOptions as _createDayOptions,
   getAvailableDays as _getAvailableDays,
+  groupSessionsByDayAdvanced as _groupSessionsByDayAdvanced,
   getRoomName,
   getSubsessionDisplayTitle,
   getTrackName,
@@ -51,6 +51,10 @@ export const createDayOptions = (availableDates: string[]) => {
 
 export const getAvailableDays = (sessions: EvanSession[]) => {
   return _getAvailableDays(sessions, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL, 'weekday-only');
+};
+
+export const groupSessionsByDayAdvanced = (sessions: EvanSession[], tracks: EvanTrack[]) => {
+  return _groupSessionsByDayAdvanced(sessions, tracks, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
 };
 
 // Enhanced session filtering with session type support

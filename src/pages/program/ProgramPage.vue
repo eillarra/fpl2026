@@ -63,10 +63,9 @@ import { useFavorites } from '@evan/composables/useFavorites';
 import { useEventStore } from '@evan/stores/event';
 import { logger } from '@evan/utils/logger';
 
-import { EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL } from '@/constants';
 import {
   filterSessionsWithTypes,
-  groupSessionsByDayAdvanced as _groupSessionsByDayAdvanced,
+  groupSessionsByDayAdvanced,
   getSessionDisplayTitle,
   sortSessionsAdvanced,
   getKeynoteAvatar,
@@ -142,7 +141,7 @@ const groupedSessions = computed(() => {
     return null;
   }
   const tracks = eventStore.event?.tracks || [];
-  return _groupSessionsByDayAdvanced(filteredSessions.value, tracks, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
+  return groupSessionsByDayAdvanced(filteredSessions.value, tracks);
 });
 
 const hasFiltersApplied = computed(() => {
