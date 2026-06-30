@@ -86,6 +86,12 @@ const routes: RouteRecordRaw[] = [
         ],
       },
       {
+        path: '/artifact-evaluation/',
+        name: 'artifactEvaluation',
+        strict: true,
+        component: () => import('pages/ArtifactEvaluationPage.vue'),
+      },
+      {
         path: '/competition/',
         name: 'competition',
         strict: true,
@@ -119,6 +125,12 @@ const routes: RouteRecordRaw[] = [
             name: 'steeringCommittee',
             strict: true,
             component: () => import('pages/committees/SteeringCommitteePage.vue'),
+          },
+          {
+            path: '/committees/artifact-evaluation-committee/',
+            name: 'artifactEvaluationCommittee',
+            strict: true,
+            component: () => import('pages/committees/ArtifactEvaluationCommitteePage.vue'),
           },
         ],
       },

@@ -189,6 +189,7 @@ import {
   iconRegistration,
   iconSend,
   iconSponsors,
+  iconSubmissions,
   iconVenue,
 } from '@/icons';
 
@@ -207,6 +208,7 @@ const baseMenu: MenuItem[] = [
     icon: iconProgram,
     children: [{ route: 'keynotes', label: 'Keynotes' }],
   },
+  { route: 'artifactEvaluation', label: 'Artifact Evaluation', icon: iconSubmissions },
   { route: 'competition', label: 'Competition', icon: iconChip },
   {
     route: 'organizingCommittee',
@@ -216,6 +218,7 @@ const baseMenu: MenuItem[] = [
       { route: 'organizingCommittee', label: 'Organizing Committee' },
       { route: 'programCommittee', label: 'Program Committee' },
       { route: 'steeringCommittee', label: 'Steering Committee' },
+      { route: 'artifactEvaluationCommittee', label: 'Artifact Evaluation Committee (AEC)' },
     ],
   },
   {
