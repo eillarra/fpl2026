@@ -10,12 +10,13 @@
           Early registration deadline:<br />
           <strong>{{ format(event.registration_early_deadline, 'PPPPpppp') }}.</strong>
         </template>
+        <template v-else-if="isRegular">
+          Registration deadline:<br />
+          <strong>{{ format(event.registration_deadline, 'PPPPpppp') }}.</strong>
+        </template>
         <template v-else-if="isOnsite">
           On-site registration deadline:<br />
           <strong>{{ format(event.registration_onsite_deadline, 'PPPPpppp') }}.</strong>
-        </template>
-        <template v-else>
-          Registration deadline:<br /><strong>{{ format(event.registration_deadline, 'PPPPpppp') }}.</strong>
         </template>
       </h6>
       <div class="q-mb-xl">
@@ -135,6 +136,9 @@ const isEarly = computed<boolean>(() => {
   return !!event.value?.registration_early_deadline && new Date() < new Date(event.value.registration_early_deadline);
 });
 const registrationText = computed<MarkdownText | null>(() => contentsDict.value['registration']?.value || null);
+const isRegular = computed<boolean>(() => {
+  return !!event.value?.registration_deadline && new Date() < new Date(event.value.registration_deadline);
+});
 const isOnsite = computed<boolean>(() => {
   return !!event.value?.registration_onsite_deadline && new Date() < new Date(event.value.registration_onsite_deadline);
 });
@@ -144,8 +148,9 @@ const hasOnsiteFees = computed<boolean>(() => {
 const currentFeeColumn = computed<'early' | 'regular' | 'onsite' | null>(() => {
   if (!event.value?.is_open_for_registration) return null;
   if (isEarly.value) return 'early';
+  if (isRegular.value) return 'regular';
   if (isOnsite.value) return 'onsite';
-  return 'regular';
+  return null;
 });
 const registrationDates = computed<ImportantDate[]>(() => {
   if (!event.value) return [];
