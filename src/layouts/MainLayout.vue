@@ -12,7 +12,7 @@
 </style>
 
 <template>
-  <q-layout v-show="_loaded" view="hHh lpr lfr" class="fpl__layout">
+  <q-layout v-if="_loaded" view="hHh lpr lfr" class="fpl__layout">
     <q-header v-if="$q.screen.lt.md" class="fpl__header bg-white text-dark">
       <q-toolbar class="fpl__toolbar container">
         <router-link :to="{ name: 'home' }" class="block">

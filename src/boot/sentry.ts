@@ -29,7 +29,12 @@ export default boot(({ app, router }) => {
       // Ignore some errors: https://docs.sentry.io/platforms/javascript/configuration/filtering/
       // - ResizeObserver loop errors
       // - 'vite:preloadError` equivalent errors
-      ignoreErrors: ['ResizeObserver loop', ...PRELOAD_ERRORS],
+      // - Quasar QLayout touch handler firing on raw mouseup (FPL2026-7)
+      ignoreErrors: [
+        'ResizeObserver loop',
+        /Cannot read properties of undefined \(reading ['"]direction['"]\)/,
+        ...PRELOAD_ERRORS,
+      ],
       // VueOptions: suppress reporting of all props data
       attachProps: false,
     });
