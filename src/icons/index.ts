@@ -1,4 +1,4 @@
-import { fabLinkedin, fabTwitter, fabYoutube, fabXTwitter, fabGithub } from '@quasar/extras/fontawesome-v6';
+import { fabLinkedin, fabTwitter, fabYoutube, fabXTwitter, fabGithub } from '@quasar/extras/fontawesome-v7';
 import {
   symSharpAddCircle,
   symSharpAttachFile,

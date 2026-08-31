@@ -1,4 +1,4 @@
-import { boot } from 'quasar/wrappers';
+import { defineBoot } from '#q-app';
 import * as Sentry from '@sentry/vue';
 
 import { initLogger } from '@evan/utils/logger';
@@ -14,7 +14,7 @@ const PRELOAD_ERRORS = [
   /'text\/html' is not a valid JavaScript MIME type/i,
 ];
 
-export default boot(({ app, router }) => {
+export default defineBoot(({ app, router }) => {
   const isProduction = !!process.env.PROD;
 
   if (isProduction) {

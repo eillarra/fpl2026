@@ -38,13 +38,13 @@ class Notify {
     // 400 Bad Request || 403 Forbidden
     if (error.status === 400 || error.status === 403) {
       const errors: string[] = [];
-      if (error.data) {
-        Object.keys(error.data).forEach((k) => {
-          if (typeof error.data[k] === 'string') {
-            errors.push(`<strong>${k}</strong>: ${error.data[k]}`);
-          } else if (Array.isArray(error.data[k])) {
-            error.data[k].forEach((v: string) => {
-              errors.push(`<strong>${k}</strong>: ${v}`);
+      if (error.data && typeof error.data === 'object') {
+        Object.entries(error.data).forEach(([k, v]) => {
+          if (typeof v === 'string') {
+            errors.push(`<strong>${k}</strong>: ${v}`);
+          } else if (Array.isArray(v)) {
+            v.forEach((val: string) => {
+              errors.push(`<strong>${k}</strong>: ${val}`);
             });
           }
         });

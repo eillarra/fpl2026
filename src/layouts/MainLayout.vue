@@ -124,7 +124,7 @@
                     <img src="~assets/fpl-logo.svg" class="fpl__logo-footer" />
                   </router-link>
                   <a
-                    :href="submissionsUrl"
+                    :href="submissionsUrl ?? undefined"
                     target="_blank"
                     rel="noopener noreferrer"
                     title="EasyChair"

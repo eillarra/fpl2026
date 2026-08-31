@@ -1,6 +1,6 @@
 {
   "name": "org.fpl.2026",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "The FPL 2026 conference app.",
   "productName": "FPL 2026",
   "author": "Eneko Illarramendi <eneko@illarra.com>",
@@ -9,7 +9,10 @@
   "engines": {
     "node": "^24"
   },
-  "packageManager": "yarn@4.17.1",
+  "packageManager": "yarn@4.18.0",
+  "workspaces": [
+    "src-pwa"
+  ],
   "scripts": {
     "lint": "eslint -c ./eslint.config.js \"./src*/**/*.{ts,js,cjs,mjs,vue}\"",
     "format": "prettier --write \"**/*.{js,ts,vue,scss,html,md,json}\" --ignore-path .gitignore",
@@ -19,38 +22,34 @@
     "postinstall": "quasar prepare"
   },
   "dependencies": {
-    "@quasar/extras": "^1.18.0",
-    "@sentry/vue": "^10.65.0",
+    "@quasar/extras": "^2.0.4",
+    "@sentry/vue": "^10.71.0",
     "evan-kit": "file:./evan-kit",
-    "pinia": "^3.0.4",
-    "quasar": "^2.21.3",
+    "pinia": "^4.0.3",
+    "quasar": "^2.28.0",
     "register-service-worker": "^1.7.2",
-    "vue": "^3.5.39",
-    "vue-router": "^5.1.0"
+    "vue": "^3.5.42",
+    "vue-router": "^5.2.0"
   },
   "devDependencies": {
-    "@eslint/js": "^9.39.5",
-    "@quasar/app-vite": "^2.6.2",
+    "@eslint/js": "^10.0.1",
+    "@quasar/app-vite": "^3.8.1",
     "@types/node": "^24",
-    "@types/web": "^0.0.352",
+    "@types/web": "^0.0.354",
+    "@vue/compiler-dom": "^3.5.42",
+    "@vue/devtools-api": "^8.2.1",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/eslint-config-typescript": "^14.9.0",
-    "autoprefixer": "^10.5.2",
-    "eslint": "^9.39.5",
-    "eslint-plugin-vue": "^10.9.2",
-    "globals": "^17.7.0",
-    "prettier": "^3.9.5",
-    "typescript": "^5.9.3",
-    "vite": "^8.1.4",
-    "vite-plugin-checker": "^0.12.0",
+    "autoprefixer": "^10.5.4",
+    "eslint": "^10.9.1",
+    "eslint-plugin-vue": "^10.10.0",
+    "globals": "^17.11.0",
+    "postcss": "^8.5.26",
+    "prettier": "^3.9.6",
+    "typescript": "^6.0.3",
+    "vite": "^8.2.2",
+    "vite-plugin-checker": "^0.14.5",
     "vue-eslint-parser": "^10.4.1",
-    "vue-tsc": "^3.3.7",
-    "workbox-build": "^7.4.1",
-    "workbox-cacheable-response": "^7.4.1",
-    "workbox-core": "^7.4.1",
-    "workbox-expiration": "^7.4.1",
-    "workbox-precaching": "^7.4.1",
-    "workbox-routing": "^7.4.1",
-    "workbox-strategies": "^7.4.1"
+    "vue-tsc": "^3.3.11"
   }
 }

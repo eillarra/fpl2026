@@ -5,9 +5,9 @@ import path from 'path';
 // Configuration for your app
 // https://quasar.dev/quasar-cli-vite/quasar-config-js
 
-import { configure } from 'quasar/wrappers';
+import { defineConfig } from '#q-app';
 
-export default configure((/* ctx */) => {
+export default defineConfig((/* ctx */) => {
   return {
     // https://quasar.dev/quasar-cli-vite/prefetch-feature
     // preFetch: true,
@@ -36,7 +36,7 @@ export default configure((/* ctx */) => {
     // Full list of options: https://quasar.dev/quasar-cli-vite/quasar-config-js#build
     build: {
       target: {
-        browser: ['es2022', 'firefox115', 'chrome115', 'safari15'],
+        browser: 'baseline-widely-available',
         node: 'node20',
       },
 
@@ -49,15 +49,26 @@ export default configure((/* ctx */) => {
 
       // publicPath: '/',
       // analyze: true,
-      env: {
-        APP_DOMAIN: process.env.APP_DOMAIN || 'localhost:9200',
-        GIT_COMMIT_HASH: process.env.GIT_COMMIT_HASH || 'dev',
+      define: {
+        'process.env.APP_DOMAIN': JSON.stringify(process.env.APP_DOMAIN || 'localhost:9200'),
+        'process.env.GIT_COMMIT_HASH': JSON.stringify(process.env.GIT_COMMIT_HASH || 'dev'),
       },
       // rawDefine: {}
       // ignorePublicFolder: true,
       // minify: false,
       // polyfillModulePreload: true,
       // distDir
+
+      // v3 dropped the v2 default aliases (boot/components/layouts/pages/assets/stores) — restore them
+      alias: {
+        src: path.resolve(__dirname, 'src'),
+        boot: path.resolve(__dirname, 'src/boot'),
+        components: path.resolve(__dirname, 'src/components'),
+        layouts: path.resolve(__dirname, 'src/layouts'),
+        pages: path.resolve(__dirname, 'src/pages'),
+        assets: path.resolve(__dirname, 'src/assets'),
+        stores: path.resolve(__dirname, 'src/stores'),
+      },
 
       extendViteConf(viteConf) {
         // Add path aliases

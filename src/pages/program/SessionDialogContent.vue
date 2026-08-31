@@ -220,7 +220,7 @@
               </h4>
               <program-marked-div
                 v-if="subsessionProgramContent.get(subsession.id)"
-                :text="subsessionProgramContent.get(subsession.id)"
+                :text="subsessionProgramContent.get(subsession.id) ?? ''"
                 hide-favorite-btn
                 class="q-py-md"
               />

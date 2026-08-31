@@ -195,7 +195,7 @@ export const createSubsessionDisplayInfo = (
   sessionRoom: number | null,
   rooms: EvanRoom[] = [],
 ): SessionDisplayInfo => {
-  const displayTitle = getSubsessionDisplayTitle(subsession, subsessionIndex, sessionCode);
+  const displayTitle = getSubsessionDisplayTitle(subsession, subsessionIndex, sessionCode ?? undefined);
 
   return {
     title: displayTitle,

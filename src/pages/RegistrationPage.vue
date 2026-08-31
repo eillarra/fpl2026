@@ -8,15 +8,15 @@
         the link below.<br /><br />
         <template v-if="isEarly">
           Early registration deadline:<br />
-          <strong>{{ format(event.registration_early_deadline, 'PPPPpppp') }}.</strong>
+          <strong>{{ earlyDeadline }}.</strong>
         </template>
         <template v-else-if="isRegular">
           Registration deadline:<br />
-          <strong>{{ format(event.registration_deadline, 'PPPPpppp') }}.</strong>
+          <strong>{{ regularDeadline }}.</strong>
         </template>
         <template v-else-if="isOnsite">
           On-site registration deadline:<br />
-          <strong>{{ format(event.registration_onsite_deadline, 'PPPPpppp') }}.</strong>
+          <strong>{{ onsiteDeadline }}.</strong>
         </template>
       </h6>
       <div class="q-mb-xl">
@@ -141,6 +141,18 @@ const isRegular = computed<boolean>(() => {
 });
 const isOnsite = computed<boolean>(() => {
   return !!event.value?.registration_onsite_deadline && new Date() < new Date(event.value.registration_onsite_deadline);
+});
+const earlyDeadline = computed<string | null>(() => {
+  const deadline = event.value?.registration_early_deadline;
+  return isEarly.value && deadline ? format(deadline, 'PPPPpppp') : null;
+});
+const regularDeadline = computed<string | null>(() => {
+  const deadline = event.value?.registration_deadline;
+  return isRegular.value && deadline ? format(deadline, 'PPPPpppp') : null;
+});
+const onsiteDeadline = computed<string | null>(() => {
+  const deadline = event.value?.registration_onsite_deadline;
+  return isOnsite.value && deadline ? format(deadline, 'PPPPpppp') : null;
 });
 const hasOnsiteFees = computed<boolean>(() => {
   return event.value?.fees.some((fee) => fee.onsite_value != null) ?? false;
