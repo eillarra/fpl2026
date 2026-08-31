@@ -96,7 +96,7 @@ const selectedSession = ref<EvanSession | null>(null);
 const showSessionDialog = ref(false);
 
 const allWorkshops = computed(() => {
-  const excludedTrackNames = ['keynotes', 'paper track', 'catering'];
+  const excludedTrackNames = ['keynotes', 'paper track', 'catering', 'break'];
 
   return eventStore.sessions.filter((session) => {
     const track = eventStore.event?.tracks?.find((t) => t.id === session.track);

@@ -283,6 +283,7 @@ import {
   formatProgramDate,
   formatProgramTime,
   getRoomName,
+  isBreakTrackName,
 } from '@/utils/program';
 
 import MarkedDiv from '@evan/components/MarkedDiv.vue';
@@ -348,7 +349,7 @@ const sessionType = computed<'regular' | 'social' | 'catering'>(() => {
 
   if (props.session.track && eventStore.event?.tracks) {
     const track = eventStore.event.tracks.find((t) => t.id === props.session.track);
-    if (track && track.name.toLowerCase().includes('catering')) {
+    if (track && isBreakTrackName(track.name)) {
       return 'catering';
     }
   }

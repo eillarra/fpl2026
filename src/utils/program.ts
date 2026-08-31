@@ -57,6 +57,12 @@ export const groupSessionsByDayAdvanced = (sessions: EvanSession[], tracks: Evan
   return _groupSessionsByDayAdvanced(sessions, tracks, EVAN_EVENT_TIMEZONE, EVAN_EVENT_IS_VIRTUAL);
 };
 
+// Break/catering sessions (lunch, coffee, registration); track renamed to "Break" for FPL 2026
+export const isBreakTrackName = (trackName: string | null | undefined): boolean => {
+  const name = (trackName || '').toLowerCase();
+  return name.includes('break') || name.includes('catering');
+};
+
 // Enhanced session filtering with session type support
 export const filterSessionsWithTypes = (
   sessions: EvanSession[],

@@ -1,6 +1,6 @@
 <template>
   <q-card flat square bordered :class="cardClasses" @click="$emit('click')">
-    <q-card-section>
+    <q-card-section class="q-pb-none">
       <q-icon v-if="showFavorite" size="xs" :name="favoriteIcon" color="grey-7" class="float-right q-ml-lg" />
       <div v-if="categoryLabel" class="text-weight-bold text-caption">
         {{ categoryLabel }}
@@ -10,7 +10,7 @@
       </div>
     </q-card-section>
     <q-card-section class="q-py-none">
-      <div class="text-fpl-red text-weight-bold">
+      <div class="text-weight-bold">
         <span class="text-caption">
           {{ formatDate(startTime) }}
         </span>

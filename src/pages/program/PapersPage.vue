@@ -2,14 +2,11 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-4 flex column" v-show="$q.screen.gt.xs">
+        <div class="col-12 col-md-3 flex column" v-show="$q.screen.gt.xs">
           <fpl-separator label="Accepted Papers" />
           <h6>{{ papersDescription }}</h6>
-          <div class="q-mb-lg">
-            <proceedings-dialog button-label="Online proceedings" :button-class="{ 'full-width': $q.screen.lt.sm }" />
-          </div>
         </div>
-        <div class="col-12 col-md-7">
+        <div class="col-12 col-md-8">
           <fpl-search-bar
             placeholder="Search papers by title, authors, session, or ID"
             class="q-mb-md"
@@ -58,13 +55,6 @@
               </li>
             </ul>
           </template>
-
-          <q-card v-if="$q.screen.lt.sm" flat bordered square class="q-pa-sm q-mb-md">
-            <q-card-section>
-              <h6 class="q-mt-none">{{ papersDescription }}</h6>
-              <proceedings-dialog button-label="Online proceedings" :button-class="{ 'full-width': $q.screen.lt.sm }" />
-            </q-card-section>
-          </q-card>
         </div>
       </div>
     </div>
@@ -83,7 +73,6 @@ import FplSearchBar from '@/components/FplSearchBar.vue';
 import FplSeparator from '@/components/FplSeparator.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
 import PaperDetailsDialog from '@/components/program/PaperDetailsDialog.vue';
-import ProceedingsDialog from '@/components/program/ProceedingsDialog.vue';
 
 import { iconAddCircle } from '@/icons';
 
