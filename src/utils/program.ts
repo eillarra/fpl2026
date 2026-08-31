@@ -90,7 +90,7 @@ export const filterSessionsWithTypes = (
         ...session.topics.map((topicId) => getTopicName(topics, topicId)),
       ];
 
-      // Add paper topics for papers linked to this session
+      // Add paper topics, titles and authors for papers linked to this session
       const sessionPapers = papers.filter((paper) => paper.session === session.id || paper.subsession === session.id);
       sessionPapers.forEach((paper) => {
         paper.topics.forEach((topicId) => {
@@ -99,6 +99,13 @@ export const filterSessionsWithTypes = (
             searchFields.push(topicName);
           }
         });
+
+        searchFields.push(paper.title);
+        const authorsStr =
+          paper.extra_data?.authors_str ?? paper.extra_data?.authors?.map((author) => author.name).join(', ');
+        if (authorsStr) {
+          searchFields.push(authorsStr);
+        }
       });
 
       // If this session has a keynote, also add "keynote" as a searchable term

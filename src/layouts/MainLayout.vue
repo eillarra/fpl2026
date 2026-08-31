@@ -206,7 +206,10 @@ const baseMenu: MenuItem[] = [
     route: 'program',
     label: 'Program',
     icon: iconProgram,
-    children: [{ route: 'keynotes', label: 'Keynotes' }],
+    children: [
+      { route: 'keynotes', label: 'Keynotes' },
+      { route: 'acceptedPapers', label: 'Accepted Papers' },
+    ],
   },
   { route: 'artifactEvaluation', label: 'Artifact Evaluation', icon: iconSubmissions },
   { route: 'competition', label: 'Competition', icon: iconChip },

@@ -35,36 +35,30 @@
             description="Try adjusting your search terms or filters."
           />
           <template v-else>
-            <div
-              v-for="sessionGroup in papersBySession"
-              :key="sessionGroup.sessionId || 'unassigned'"
-              class="evan__marked q-mb-xl"
-            >
-              <h3>{{ sessionGroup.sessionTitle }}</h3>
-              <ul class="papers-session-list">
-                <li v-for="paper in sessionGroup.papers" :key="paper.id" class="paper-item q-mb-sm">
-                  <div class="row items-center no-wrap">
-                    <div class="col text-wrap-balance">
-                      <strong>{{ paper.title }}</strong>
-                      <em v-if="getAuthorsDisplay(paper)"> <br />{{ getAuthorsDisplay(paper) }} </em>
-                    </div>
-                    <div class="col-auto q-ml-sm">
-                      <paper-details-dialog
-                        :paper="paper"
-                        :button-icon="iconAddCircle"
-                        :button-label="undefined"
-                        button-color="negative"
-                        button-size="md"
-                        button-flat
-                        button-round
-                        button-dense
-                      />
-                    </div>
+            <ul class="papers-session-list evan__marked">
+              <li v-for="paper in sortedPapers" :key="paper.id" class="paper-item q-mb-sm">
+                <div class="row items-center no-wrap">
+                  <div class="col text-wrap-balance">
+                    <strong>{{ paper.title }}</strong>
+                    <em v-if="getAuthorsDisplay(paper)"> <br />{{ getAuthorsDisplay(paper) }} </em>
                   </div>
-                </li>
-              </ul>
-            </div>
+                  <div class="col-auto q-ml-sm">
+                    <paper-details-dialog
+                      :paper="paper"
+                      :button-icon="iconAddCircle"
+                      :button-label="undefined"
+                      button-color="fpl-blue"
+                      button-size="md"
+                      button-flat
+                      button-round
+                      button-dense
+                    />
+                  </div>
+                </div>
+              </li>
+            </ul>
           </template>
+
           <q-card v-if="$q.screen.lt.sm" flat bordered square class="q-pa-sm q-mb-md">
             <q-card-section>
               <h6 class="q-mt-none">{{ papersDescription }}</h6>
@@ -103,9 +97,7 @@ const searchQuery = ref('');
 const allPapers = computed(() => eventStore.papers);
 
 const papersDescription = computed(() =>
-  eventStore.event
-    ? `All accepted Papers at ${eventStore.event.name}: ARES papers are listed in no particular order, followed by workshops organized alphabetically, with their accepted papers, as well as ICS-CSR.`
-    : '',
+  eventStore.event ? `All accepted Papers at ${eventStore.event.name}, listed alphabetically.` : '',
 );
 
 const filteredPapers = computed(() => {
@@ -144,74 +136,7 @@ const filteredPapers = computed(() => {
   return papers;
 });
 
-const papersBySession = computed(() => {
-  const grouped = new Map<
-    string,
-    { sessionId: number | null; sessionTitle: string; papers: EvanPaper[]; sortOrder: number }
-  >();
-
-  filteredPapers.value.forEach((paper) => {
-    let sessionId: number | null = null;
-    let sessionTitle = 'Unassigned Papers';
-    let sortOrder = 999;
-
-    if (paper.session) {
-      const session = eventStore.sessions.find((s) => s.id === paper.session);
-      if (session) {
-        sessionId = session.id;
-        const tracks = eventStore.event?.tracks || [];
-        sessionTitle = getSessionDisplayTitle(session, tracks);
-
-        const sessionCodeLower = (session.code || '').toLowerCase();
-
-        if (sessionCodeLower.includes('ares')) {
-          sortOrder = 1;
-        } else if (sessionCodeLower.includes('ics-csr')) {
-          sortOrder = 9;
-        } else {
-          sortOrder = 5;
-        }
-      }
-    }
-
-    const key = `${sessionId || 'unassigned'}`;
-
-    if (!grouped.has(key)) {
-      grouped.set(key, {
-        sessionId,
-        sessionTitle,
-        papers: [],
-        sortOrder,
-      });
-    }
-
-    grouped.get(key)?.papers.push(paper);
-  });
-
-  const result = Array.from(grouped.values());
-
-  result.forEach((sessionGroup) => {
-    sessionGroup.papers.sort((a, b) => a.title.localeCompare(b.title));
-  });
-
-  return result.sort((a, b) => {
-    if (a.sortOrder !== b.sortOrder) {
-      return a.sortOrder - b.sortOrder;
-    }
-
-    if (a.sortOrder === 1) {
-      const aSession = eventStore.sessions.find((s) => s.id === a.sessionId);
-      const bSession = eventStore.sessions.find((s) => s.id === b.sessionId);
-      const aCode = aSession?.code || '';
-      const bCode = bSession?.code || '';
-      return aCode.localeCompare(bCode);
-    } else if (a.sortOrder === 3) {
-      return a.sessionTitle.localeCompare(b.sessionTitle);
-    }
-
-    return a.sessionTitle.localeCompare(b.sessionTitle);
-  });
-});
+const sortedPapers = computed(() => filteredPapers.value.slice().sort((a, b) => a.title.localeCompare(b.title)));
 
 const getAuthorsDisplay = (paper: EvanPaper): string => {
   if (paper.extra_data?.authors_str) {
