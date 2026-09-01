@@ -2,33 +2,31 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-4 flex column" v-show="$q.screen.gt.xs">
-          <fpl-separator label="Workshops" />
+        <div class="col-12 col-md-4 flex column q-pr-lg" v-show="$q.screen.gt.xs">
+          <fpl-separator label="Workshops & Tutorials" />
           <h6>
-            All workshop sessions at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
-            >.
+            All workshops and tutorials at <span class="text-no-wrap">{{ eventStore.event?.name }}</span> (Thu-Fri).
           </h6>
         </div>
-        <div class="col-12 col-md-7">
+        <div class="col-12 col-md-8">
           <fpl-search-bar placeholder="Search workshops by name" class="q-mb-md" @search="searchQuery = $event">
             <template #footer>
-              <span v-if="!searchQuery">{{ filteredWorkshops.length }} workshop sessions</span>
+              <span v-if="!searchQuery">{{ filteredWorkshops.length }} sessions</span>
               <span v-else-if="filteredWorkshops.length > 0"
-                >{{ filteredWorkshops.length }} workshop session<span v-if="filteredWorkshops.length > 1">s</span>
-                found</span
+                >{{ filteredWorkshops.length }} session<span v-if="filteredWorkshops.length > 1">s</span> found</span
               >
-              <span v-else>No workshop sessions found</span>
+              <span v-else>No sessions found</span>
             </template>
           </fpl-search-bar>
           <empty-state
             v-if="!allWorkshops.length"
             icon="code"
-            title="No workshop sessions available"
-            description="Workshop sessions will appear here once they are available."
+            title="No sessions available"
+            description="Sessions will appear here once they are available."
           />
           <empty-state
             v-else-if="!filteredWorkshops.length"
-            title="No workshop sessions found"
+            title="No sessions found"
             description="Try adjusting your search terms or filters."
           />
           <template v-else>
@@ -42,12 +40,14 @@
                 <li v-for="workshop in trackGroup.workshops" :key="workshop.id" class="q-mb-sm">
                   <div class="row items-center no-wrap">
                     <div class="col text-wrap-balance">
-                      <strong>{{ getSessionDisplayTitle(workshop, eventStore.event?.tracks) }}</strong>
+                      <span class="text-weight-semibold">{{
+                        getSessionDisplayTitle(workshop, eventStore.event?.tracks)
+                      }}</span>
                     </div>
                     <div class="col-auto q-ml-sm">
                       <q-btn
                         :icon="iconAddCircle"
-                        color="negative"
+                        color="fpl-blue"
                         size="md"
                         flat
                         round
@@ -96,7 +96,7 @@ const selectedSession = ref<EvanSession | null>(null);
 const showSessionDialog = ref(false);
 
 const allWorkshops = computed(() => {
-  const excludedTrackNames = ['keynotes', 'paper track', 'catering', 'break'];
+  const workshopTrackNames = ['workshops', 'tutorials'];
 
   return eventStore.sessions.filter((session) => {
     const track = eventStore.event?.tracks?.find((t) => t.id === session.track);
@@ -106,11 +106,7 @@ const allWorkshops = computed(() => {
       return false;
     }
 
-    if (excludedTrackNames.some((excluded) => trackName.toLowerCase().includes(excluded))) {
-      return false;
-    }
-
-    return true;
+    return workshopTrackNames.includes(trackName);
   });
 });
 
@@ -146,17 +142,22 @@ const filteredWorkshops = computed(() => {
 });
 
 const workshopsByTrack = computed(() => {
-  const grouped = new Map<string, { trackId: number | null; trackTitle: string; workshops: EvanSession[] }>();
+  const grouped = new Map<
+    string,
+    { trackId: number | null; trackTitle: string; trackPosition: number; workshops: EvanSession[] }
+  >();
 
   filteredWorkshops.value.forEach((workshop) => {
     let trackId: number | null = null;
     let trackTitle = 'Other Workshops';
+    let trackPosition = Number.MAX_SAFE_INTEGER;
 
     if (workshop.track) {
       const track = eventStore.event?.tracks?.find((t) => t.id === workshop.track);
       if (track) {
         trackId = track.id;
         trackTitle = track.name;
+        trackPosition = track.position;
       }
     }
 
@@ -166,6 +167,7 @@ const workshopsByTrack = computed(() => {
       grouped.set(key, {
         trackId,
         trackTitle,
+        trackPosition,
         workshops: [],
       });
     }
@@ -184,8 +186,8 @@ const workshopsByTrack = computed(() => {
     });
   });
 
-  // Sort tracks alphabetically
-  return result.sort((a, b) => a.trackTitle.localeCompare(b.trackTitle));
+  // Sort tracks by their position flag
+  return result.sort((a, b) => a.trackPosition - b.trackPosition);
 });
 
 const openSessionDetails = (session: EvanSession) => {

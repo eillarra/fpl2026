@@ -2,7 +2,7 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between q-mb-lg">
-        <div class="col-12 col-md-3 flex column" v-show="$q.screen.gt.xs">
+        <div class="col-12 col-md-4 flex column q-pr-lg" v-show="$q.screen.gt.xs">
           <fpl-separator label="Schedule" />
         </div>
         <div class="col-12 col-md-8">
@@ -220,7 +220,7 @@ const MAX_BACKGROUND_OVERLAPS = 3;
 // Sessions forced into their own full-width row regardless of time overlaps:
 // they are distinct announcements, not parallel content
 const MANUALLY_SINGLE_ROW_SLUGS = [
-  'welcome-reception-at-castle-of-the-counts-1930-2200',
+  'welcome-reception-at-castle-of-the-counts',
   'contest-winners-announcement',
 ];
 
@@ -331,7 +331,7 @@ const displayGroups = computed<DisplayGroup[]>(() => {
     : filteredSessions.value.length
       ? [
           {
-            date: (selectedDate?.value as string) || 'all',
+            date: (selectedDate?.value) || 'all',
             dateLabel: formatProgramDate(filteredSessions.value[0].start_at),
             sessions: filteredSessions.value,
           },

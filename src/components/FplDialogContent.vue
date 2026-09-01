@@ -4,7 +4,7 @@
 
   .q-dialog__inner--minimized > & {
     width: 100% !important;
-    max-width: 1300px;
+    max-width: 1000px;
   }
 
   .q-stepper--vertical .q-stepper__tab {

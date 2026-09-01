@@ -2,9 +2,12 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-3 flex column" v-show="$q.screen.gt.xs">
+        <div class="col-12 col-md-4 flex column q-pr-lg" v-show="$q.screen.gt.xs">
           <fpl-separator label="Accepted Papers" />
-          <h6>{{ papersDescription }}</h6>
+          <h6>
+            All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
+            >, listed alphabetically.
+          </h6>
         </div>
         <div class="col-12 col-md-8">
           <fpl-search-bar
@@ -36,7 +39,7 @@
               <li v-for="paper in sortedPapers" :key="paper.id" class="paper-item q-mb-sm">
                 <div class="row items-center no-wrap">
                   <div class="col text-wrap-balance">
-                    <strong>{{ paper.title }}</strong>
+                    <span class="text-weight-semibold">{{ paper.title }}</span>
                     <em v-if="getAuthorsDisplay(paper)"> <br />{{ getAuthorsDisplay(paper) }} </em>
                   </div>
                   <div class="col-auto q-ml-sm">
@@ -84,10 +87,6 @@ const selectedDate = inject<{ value: string }>('selectedDate');
 const searchQuery = ref('');
 
 const allPapers = computed(() => eventStore.papers);
-
-const papersDescription = computed(() =>
-  eventStore.event ? `All accepted Papers at ${eventStore.event.name}, listed alphabetically.` : '',
-);
 
 const filteredPapers = computed(() => {
   let papers = allPapers.value;

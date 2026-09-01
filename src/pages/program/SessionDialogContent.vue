@@ -193,13 +193,12 @@
               </div>
             </div>
             <div class="col-12 col-md-6">
-              <h6 class="q-mt-none">{{ session.title }}.</h6>
               <marked-div :text="session.description" />
             </div>
           </div>
         </q-tab-panel>
         <q-tab-panel name="program">
-          <div v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-my-lg">
+          <div v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-mb-lg">
             <program-marked-div :text="sessionProgramContent" hide-favorite-btn />
           </div>
           <div v-if="hasSubsessions">

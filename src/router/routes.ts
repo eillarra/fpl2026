@@ -190,6 +190,14 @@ const routes: RouteRecordRaw[] = [
           {
             path: '',
             name: 'program',
+            strict: true,
+            redirect: {
+              name: 'fullProgram',
+            },
+          },
+          {
+            path: 'full/',
+            name: 'fullProgram',
             component: () => import('pages/program/ProgramPage.vue'),
           },
           {
