@@ -1,7 +1,7 @@
 <template>
   <fpl-dialog-content :title="$q.screen.gt.sm ? titles[0] : titles[1]" hide-drawer>
     <template #tabs>
-      <q-tabs v-if="!isSpecialSessionType && !linkedKeynote" v-model="tab" shrink inline-label no-caps>
+      <q-tabs v-if="!isSpecialSessionType && !keynoteInline" v-model="tab" shrink inline-label no-caps>
         <q-tab v-if="hasProgramContent" name="program" label="Program" />
         <q-tab v-if="hasGeneralInfo" name="info" label="General information" />
         <q-tab v-if="hasCommittees" name="committees" label="Committees" />
@@ -111,25 +111,27 @@
         </div>
       </div>
 
-      <!-- Pattern B: standalone keynote session — show keynote content directly -->
-      <div v-else-if="linkedKeynote" class="q-px-lg q-pb-xl">
-        <div v-if="linkedKeynote.speaker" class="q-mb-md">
+      <!-- Pattern A/B: keynote session — show remaining program text (session chair
+           etc.) plus the keynote content directly, no nested "More info" dialog -->
+      <div v-else-if="keynoteInline" class="q-px-lg q-pb-xl">
+        <program-marked-div v-if="programKeynoteText" :text="programKeynoteText" hide-favorite-btn class="q-mb-lg" />
+        <div v-if="keynoteInline.speaker" class="q-mb-md">
           <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker</div>
           <div class="row items-start q-col-gutter-lg q-mb-lg">
             <div class="col-shrink">
-              <avatar-display :file="getKeynoteAvatar(linkedKeynote)" size="128px" :alt-text="linkedKeynote.speaker" />
+              <avatar-display :file="getKeynoteAvatar(keynoteInline)" size="128px" :alt-text="keynoteInline.speaker" />
             </div>
             <div class="col">
               <p class="q-mb-none text-wrap-balance">
-                <strong>{{ linkedKeynote.speaker }}</strong>
-                <span v-if="linkedKeynote.extra_data?.speaker_affiliation" class="text-grey-8">
-                  <br />{{ linkedKeynote.extra_data.speaker_affiliation }}
+                <strong>{{ keynoteInline.speaker }}</strong>
+                <span v-if="keynoteInline.extra_data?.speaker_affiliation" class="text-grey-8">
+                  <br />{{ keynoteInline.extra_data.speaker_affiliation }}
                 </span>
               </p>
             </div>
-            <div v-if="linkedKeynote.extra_data?.speaker_website" class="col-auto">
+            <div v-if="keynoteInline.extra_data?.speaker_website" class="col-auto">
               <fpl-btn
-                :href="linkedKeynote.extra_data.speaker_website"
+                :href="keynoteInline.extra_data.speaker_website"
                 target="_blank"
                 :icon="iconOpenInNew"
                 label="Visit website"
@@ -138,13 +140,13 @@
             </div>
           </div>
         </div>
-        <div v-if="linkedKeynote.abstract" class="q-mb-lg">
+        <div v-if="keynoteInline.abstract" class="q-mb-lg">
           <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
-          <marked-div :text="linkedKeynote.abstract" />
+          <marked-div :text="keynoteInline.abstract" />
         </div>
-        <div v-if="linkedKeynote.bio" class="q-mb-lg">
+        <div v-if="keynoteInline.bio" class="q-mb-lg">
           <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker Bio</div>
-          <marked-div :text="linkedKeynote.bio" />
+          <marked-div :text="keynoteInline.bio" />
         </div>
       </div>
 
@@ -360,11 +362,32 @@ const isSpecialSessionType = computed(() => {
   return sessionType.value === 'social' || sessionType.value === 'catering';
 });
 
-// Pattern B: find a keynote directly linked to this session (no subsession)
+// Pattern A: program content references a keynote via a single [keynote:CODE] tag
+// (may be preceded by session chair etc.) — show keynote contents directly in
+// the session dialog instead of a nested "More info" dialog
+const programKeynote = computed(() => {
+  const program = props.session.program;
+  if (!program || isSuperseded(program)) return null;
+  const tags = program.match(/\[keynote:[^\]]+\]/g);
+  if (!tags || tags.length !== 1) return null;
+  const code = tags[0].match(/\[keynote:([^\]]+)\]/)?.[1];
+  if (!code) return null;
+  return eventStore.keynotes.find((k) => k.code === code) ?? null;
+});
+
+// Program text with the keynote tag stripped (session chair info etc. stays)
+const programKeynoteText = computed(() => {
+  if (!programKeynote.value) return '';
+  return (sessionProgramContent.value || '').replace(/\[keynote:[^\]]+\]/g, '').trim();
+});
+
+// Pattern B: find keynote directly linked to this session (no subsession)
 const linkedKeynote = computed(() => {
   if (hasProgramContent.value || hasGeneralInfo.value) return null;
   return eventStore.keynotes.find((k) => k.session === props.session.id && !k.subsession) ?? null;
 });
+
+const keynoteInline = computed(() => linkedKeynote.value ?? programKeynote.value);
 
 const hasSubsessions = computed(() => {
   return props.session.subsessions && props.session.subsessions.length > 0;
