@@ -107,10 +107,10 @@ const searchQuery = ref('');
 
 const selectedSession = ref<EvanSession | null>(null);
 const closeSessionDialogRouteUpdate = async () => {
-  window.history.replaceState({ ...window.history.state, preserveScroll: true }, '');
   await router.replace({
-    name: 'program',
+    name: 'fullProgram',
     query: route.query,
+    state: { preserveScroll: true },
   });
 };
 
@@ -219,10 +219,7 @@ const MAX_BACKGROUND_OVERLAPS = 3;
 
 // Sessions forced into their own full-width row regardless of time overlaps:
 // they are distinct announcements, not parallel content
-const MANUALLY_SINGLE_ROW_SLUGS = [
-  'welcome-reception-at-castle-of-the-counts',
-  'contest-winners-announcement',
-];
+const MANUALLY_SINGLE_ROW_SLUGS = ['welcome-reception-at-castle-of-the-counts', 'contest-winners-announcement'];
 
 const isManuallySingleRow = (session: EvanSession): boolean => MANUALLY_SINGLE_ROW_SLUGS.includes(session.slug);
 
@@ -331,7 +328,7 @@ const displayGroups = computed<DisplayGroup[]>(() => {
     : filteredSessions.value.length
       ? [
           {
-            date: (selectedDate?.value) || 'all',
+            date: selectedDate?.value || 'all',
             dateLabel: formatProgramDate(filteredSessions.value[0].start_at),
             sessions: filteredSessions.value,
           },
@@ -394,6 +391,7 @@ const openSessionDetails = async (session: EvanSession) => {
       name: 'session',
       params: { sessionSlug: session.slug },
       query: route.query,
+      state: { preserveScroll: true },
     });
   }
 
