@@ -63,6 +63,19 @@ export const isBreakTrackName = (trackName: string | null | undefined): boolean 
   return name.includes('break') || name.includes('catering');
 };
 
+// Poster sessions have their own track in evan; they render as sidebar text entries
+// on the program page instead of cards
+export const isPosterTrackName = (trackName: string | null | undefined): boolean => {
+  const name = (trackName || '').toLowerCase();
+  return name.includes('poster');
+};
+
+export const isPosterSession = (session: EvanSession, tracks: EvanTrack[]): boolean => {
+  if (!session.track) return false;
+  const track = tracks.find((t) => t.id === session.track);
+  return isPosterTrackName(track?.name);
+};
+
 // Enhanced session filtering with session type support
 export const filterSessionsWithTypes = (
   sessions: EvanSession[],

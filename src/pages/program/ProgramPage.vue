@@ -46,7 +46,7 @@
                   <div class="row q-col-gutter-md">
                     <div
                       v-for="session in row.sessions"
-                      :key="session.id"
+                      :key="displayKey(session)"
                       :class="row.parallel ? getParallelRowClass(row.sessions.length) : 'col-12'"
                     >
                       <program-card v-bind="getSessionCardProps(session)" @click="openSessionDetails(session)" />
@@ -83,6 +83,7 @@ import {
   formatProgramDate,
   formatProgramTime,
   isBreakTrackName,
+  isPosterSession,
   sortSessionsAdvanced,
   getKeynoteAvatar,
   type EvanSession,
@@ -131,12 +132,43 @@ const showSessionDialog = computed<boolean>({
   },
 });
 
+// Sessions with multiple timed subsessions (e.g. a workshop booked Thu-Fri as one session,
+// or an industry session split into parts) render as one block per subsession, so each
+// shows its own time range instead of one card spanning them all
+interface DisplaySession extends EvanSession {
+  displayId: string;
+}
+
+const expandSubsessions = (sessions: EvanSession[]): DisplaySession[] => {
+  const expanded: DisplaySession[] = [];
+
+  for (const session of sessions) {
+    const subs = (session.subsessions ?? []).filter((sub) => sub.start_at);
+
+    if (subs.length > 1) {
+      for (const sub of subs) {
+        expanded.push({
+          ...session,
+          title: sub.title ? `${session.title} - ${sub.title}` : session.title,
+          start_at: sub.start_at,
+          end_at: sub.end_at || session.end_at,
+          displayId: `${session.id}-${sub.id}`,
+        });
+      }
+    } else {
+      expanded.push({ ...session, displayId: String(session.id) });
+    }
+  }
+
+  return expanded;
+};
+
 const filteredSessions = computed(() => {
   const tracks = eventStore.event?.tracks || [];
   const selectedDateValue = selectedDate?.value || 'all';
 
   const filtered = filterSessionsWithTypes(
-    eventStore.sessions,
+    expandSubsessions(eventStore.sessions),
     searchQuery.value,
     selectedDateValue,
     [],
@@ -211,61 +243,44 @@ const getSessionVariant = (session: EvanSession): 'catering' | 'session' | 'keyn
 
 const isBreakSession = (session: EvanSession): boolean => getSessionVariant(session) === 'catering';
 
-// Sessions that are both long and heavily overlapped (all-day poster sessions, ORConf)
-// render as their own full-width row instead of joining overlap clusters,
-// so they don't glue whole day together
-const MIN_BACKGROUND_DURATION = 240;
-const MAX_BACKGROUND_OVERLAPS = 3;
-
 // Sessions forced into their own full-width row regardless of time overlaps:
 // they are distinct announcements, not parallel content
-const MANUALLY_SINGLE_ROW_SLUGS = ['welcome-reception-at-castle-of-the-counts', 'contest-winners-announcement'];
+const MANUALLY_SINGLE_ROW_IDS = [251, 266]; // welcome reception, contest winners announcement
 
-const isManuallySingleRow = (session: EvanSession): boolean => MANUALLY_SINGLE_ROW_SLUGS.includes(session.slug);
+const isManuallySingleRow = (session: EvanSession): boolean => MANUALLY_SINGLE_ROW_IDS.includes(session.id);
 
-// Long sessions heavily overlapped by others (all-day poster sessions) are day-background
-// events: they render as simple text in the day's info column instead of cards
-const findBackgroundSessions = (sessions: EvanSession[]): Set<number> => {
-  const timed = sessions.filter((s) => s.start_at && s.end_at && !isBreakSession(s));
-  const ids = new Set<number>();
-
-  for (const session of timed) {
-    const overlaps = timed.filter(
-      (y) => y !== session && y.start_at < session.end_at && y.end_at > session.start_at,
-    ).length;
-    if (durationMinutes(session) >= MIN_BACKGROUND_DURATION && overlaps >= MAX_BACKGROUND_OVERLAPS) {
-      ids.add(session.id);
-    }
-  }
-
-  return ids;
+// Poster sessions (dedicated track in evan) are day-background events: they render as
+// simple text in the day's info column instead of cards
+const findPosterSessionIds = (sessions: EvanSession[]): Set<number> => {
+  const tracks = eventStore.event?.tracks || [];
+  return new Set(sessions.filter((s) => isPosterSession(s, tracks)).map((s) => s.id));
 };
 
 interface DayRow {
   id: string;
-  sessions: EvanSession[];
+  sessions: DisplaySession[];
   parallel: boolean;
 }
 
-const durationMinutes = (session: EvanSession): number =>
-  session.start_at && session.end_at
-    ? (new Date(session.end_at).getTime() - new Date(session.start_at).getTime()) / 60000
-    : 0;
+const displayKey = (session: EvanSession): string => (session as DisplaySession).displayId ?? String(session.id);
 
 const getParallelRowClass = (count: number): string => (count === 2 ? 'col-12 col-sm-6' : 'col-12 col-md-4');
 
 // Group a day's sessions into display rows: full-width single sessions, or clusters of
 // genuinely overlapping sessions shown side by side. Background sessions (all-day posters)
 // are treated as singletons: they live in the day's info column, not as cards
-const buildDayRows = (sessions: EvanSession[], backgroundIds: Set<number>): DayRow[] => {
+// Group a day's sessions into display rows: full-width single sessions, or clusters of
+// genuinely overlapping sessions shown side by side. Poster sessions (day-background events)
+// are treated as singletons: they live in the day's info column, not as cards
+const buildDayRows = (sessions: DisplaySession[], posterIds: Set<number>): DayRow[] => {
   const timed = sessions.filter((s) => s.start_at).sort((a, b) => a.start_at.localeCompare(b.start_at));
   const rows: DayRow[] = [];
-  let cluster: EvanSession[] = [];
+  let cluster: DisplaySession[] = [];
   let clusterEnd = '';
 
   const flushCluster = () => {
     if (cluster.length) {
-      rows.push({ id: `row-${cluster[0].id}`, sessions: cluster, parallel: cluster.length > 1 });
+      rows.push({ id: `row-${displayKey(cluster[0])}`, sessions: cluster, parallel: cluster.length > 1 });
       cluster = [];
       clusterEnd = '';
     }
@@ -274,14 +289,14 @@ const buildDayRows = (sessions: EvanSession[], backgroundIds: Set<number>): DayR
   for (const session of timed) {
     const start = session.start_at;
     const isSingleton =
-      isBreakSession(session) || isManuallySingleRow(session) || !session.end_at || backgroundIds.has(session.id);
+      isBreakSession(session) || isManuallySingleRow(session) || !session.end_at || posterIds.has(session.id);
 
     if (isSingleton || (cluster.length && start >= clusterEnd)) {
       flushCluster();
     }
 
     if (isSingleton) {
-      rows.push({ id: `row-${session.id}`, sessions: [session], parallel: false });
+      rows.push({ id: `row-${displayKey(session)}`, sessions: [session], parallel: false });
     } else {
       cluster.push(session);
       if (session.end_at > clusterEnd) {
@@ -300,11 +315,11 @@ interface DayBreakMarkerInfo {
   timeLabel: string;
 }
 
-// Info-column entries: breaks plus background sessions (all-day poster sessions), by time
-const getDayTextEntries = (sessions: EvanSession[], backgroundIds: Set<number>): DayBreakMarkerInfo[] => {
+// Info-column entries: breaks plus poster sessions, by time
+const getDayTextEntries = (sessions: EvanSession[], posterIds: Set<number>): DayBreakMarkerInfo[] => {
   const tracks = eventStore.event?.tracks || [];
   return sessions
-    .filter((s) => s.start_at && (isBreakSession(s) || backgroundIds.has(s.id)))
+    .filter((s) => s.start_at && (isBreakSession(s) || posterIds.has(s.id)))
     .sort((a, b) => a.start_at.localeCompare(b.start_at))
     .map((session) => ({
       session,
@@ -317,7 +332,7 @@ const getDayTextEntries = (sessions: EvanSession[], backgroundIds: Set<number>):
 interface DisplayGroup {
   date: string;
   dateLabel: string;
-  sessions: EvanSession[];
+  sessions: DisplaySession[];
   breaks: DayBreakMarkerInfo[];
   rows: DayRow[];
 }
@@ -336,18 +351,19 @@ const displayGroups = computed<DisplayGroup[]>(() => {
       : [];
 
   return groups.map((group) => {
-    const backgroundIds = findBackgroundSessions(group.sessions);
-    // Breaks + background sessions live in the day's info column as simple text;
+    const groupSessions = group.sessions as DisplaySession[];
+    const posterIds = findPosterSessionIds(groupSessions);
+    // Breaks + poster sessions live in the day's info column as simple text;
     // keep them as cards only when a search is active so they remain findable
     const displayed = searchQuery.value
-      ? group.sessions
-      : group.sessions.filter((s) => !isBreakSession(s) && !backgroundIds.has(s.id));
+      ? groupSessions
+      : groupSessions.filter((s) => !isBreakSession(s) && !posterIds.has(s.id));
 
     return {
       ...group,
       sessions: displayed,
-      breaks: getDayTextEntries(group.sessions, backgroundIds),
-      rows: buildDayRows(displayed, backgroundIds),
+      breaks: getDayTextEntries(groupSessions, posterIds),
+      rows: buildDayRows(displayed, posterIds),
     };
   });
 });
