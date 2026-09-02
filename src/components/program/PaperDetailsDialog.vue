@@ -40,37 +40,14 @@
                 class="q-pl-none"
               />
             </div>
-            <div v-if="sessionDisplay || subsessionDisplay" class="q-mb-lg">
-              <div class="text-subtitle2 text-grey-7 q-mb-sm">Presentation schedule</div>
-              <div v-if="!hideFavoriteBtn" class="float-right q-ml-xl">
-                <favorite-btn
-                  v-if="subsessionDisplay"
-                  type="subsession"
-                  :id="paper.subsession"
-                  :hide-label="!$q.screen.gt.sm"
-                  size="lg"
-                />
-                <favorite-btn
-                  v-else-if="sessionDisplay"
-                  type="session"
-                  :id="paper.session"
-                  :hide-label="!$q.screen.gt.sm"
-                  size="lg"
-                />
-              </div>
-              <div v-if="subsessionDisplay">
-                <strong>Session:</strong> {{ subsessionDisplay.title }}<br />
-                <span v-if="subsessionDisplay.timeInfo"><strong>Time:</strong> {{ subsessionDisplay.timeInfo }}</span
-                ><br />
-                <span v-if="subsessionDisplay.roomInfo"><strong>Room:</strong> {{ subsessionDisplay.roomInfo }}</span>
-              </div>
-              <p v-else-if="sessionDisplay">
-                <strong>Session:</strong> {{ sessionDisplay.title }}<br />
-                <span v-if="sessionDisplay.timeInfo"><strong>Time:</strong> {{ sessionDisplay.timeInfo }}</span
-                ><br />
-                <span v-if="sessionDisplay.roomInfo"><strong>Room:</strong> {{ sessionDisplay.roomInfo }}</span>
-              </p>
-            </div>
+            <schedule-block
+              :session-display="sessionDisplay"
+              :subsession-display="subsessionDisplay"
+              :session-id="paper.session"
+              :subsession-id="paper.subsession"
+              :hide-favorite-btn="hideFavoriteBtn"
+              favorite-offset="xl"
+            />
             <div v-if="paper.abstract" class="q-mb-md">
               <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
               <marked-div :text="paper.abstract" />
@@ -85,12 +62,11 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
 
-import { useEventStore } from '@evan/stores/event';
-import { createSessionDisplayInfo, createSubsessionDisplayInfo } from '@/utils/program';
+import { useSessionDisplay } from './session-content/composables/useSessionDisplay';
+import ScheduleBlock from './session-content/blocks/ScheduleBlock.vue';
 
 import FplDialog from '@/components//FplDialog.vue';
 import FplDialogContent from '@/components/FplDialogContent.vue';
-import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
 import MarkedDiv from '@evan/components/MarkedDiv.vue';
 
 import { iconCalendar, iconOpenInNew } from '@/icons';
@@ -123,7 +99,10 @@ const props = withDefaults(
   },
 );
 
-const eventStore = useEventStore();
+const { sessionDisplay, subsessionDisplay } = useSessionDisplay(
+  () => props.paper.session,
+  () => props.paper.subsession,
+);
 
 const dialogOpen = ref(false);
 
@@ -139,25 +118,6 @@ const authorsDisplay = computed(() => {
     return props.paper.extra_data.authors.map((author) => author.name).join(', ');
   }
   return null;
-});
-
-const sessionDisplay = computed(() => {
-  if (!props.paper.session) return null;
-  const session = eventStore.sessions.find((s) => s.id === props.paper.session);
-  if (!session) return null;
-
-  return createSessionDisplayInfo(session, eventStore.rooms);
-});
-
-const subsessionDisplay = computed(() => {
-  if (!props.paper.subsession) return null;
-  const session = eventStore.sessions.find((s) => s.id === props.paper.session);
-  if (!session?.subsessions) return null;
-  const subsession = session.subsessions.find((sub) => sub.id === props.paper.subsession);
-  if (!subsession) return null;
-
-  const subsessionIndex = session.subsessions.findIndex((sub) => sub.id === props.paper.subsession);
-  return createSubsessionDisplayInfo(subsession, subsessionIndex, session.code, session.room, eventStore.rooms);
 });
 </script>
 

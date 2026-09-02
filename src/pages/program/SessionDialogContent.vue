@@ -8,138 +8,32 @@
       </q-tabs>
     </template>
     <template #page>
-      <!-- Consistent timing info for all session types -->
-      <div v-if="session.start_at" class="bg-grey-2 q-py-sm q-px-lg q-mb-lg">
-        <div class="row items-center justify-between">
-          <div class="col">
-            <div class="text-h6 text-weight-bold">
-              {{ formatProgramDate(session.start_at, 'short') }}
-              <q-chip v-if="session.start_at" size="md" color="grey-4" class="q-ml-sm q-mb-sm">
-                {{ formatProgramTime(session.start_at) }} - {{ formatProgramTime(session.end_at) }}
-              </q-chip>
-            </div>
-            <strong>Room: {{ getRoomName(eventStore.rooms, session.room) }}</strong>
-          </div>
-          <div v-if="sessionType !== 'catering'" class="col-auto">
-            <favorite-btn type="session" :id="session.id" :hide-label="!$q.screen.gt.sm" size="lg" class="q-ml-md" />
-          </div>
-        </div>
-      </div>
+      <session-header-block :session="session" :hide-favorite="sessionType === 'catering'" class="q-mb-lg" />
 
       <!-- Special session types: simplified single view -->
-      <div v-if="isSpecialSessionType" class="q-px-lg q-mb-xl">
+      <div v-if="isSpecialSessionType" class="q-px-lg q-pt-md q-pb-xl">
         <div class="row reverse justify-between q-col-gutter-xl">
           <div class="col-12 col-md-5">
-            <!-- Location info prominently displayed for social events and catering -->
-            <q-card
-              v-if="session.room && getVenueAndRoomInfo"
-              flat
-              bordered
-              square
-              class="q-pa-sm q-mb-lg"
-              :class="{ 'q-pa-md': $q.screen.gt.sm }"
-            >
-              <q-card-section>
-                <fpl-subtitle>Location</fpl-subtitle>
-                <div v-if="getVenueAndRoomInfo.venue" class="q-mb-sm">
-                  <div class="text-body1 text-weight-medium">Venue: {{ getVenueAndRoomInfo.venue.name }}</div>
-                  <div class="text-h6">Location: {{ getVenueAndRoomInfo.room.name }}</div>
-                </div>
-                <div v-else class="text-h6">{{ getVenueAndRoomInfo.room.name }}</div>
-                <div v-if="getVenueAndRoomInfo.venueDescription" class="text-body2 q-mt-md">
-                  <marked-div :text="getVenueAndRoomInfo.venueDescription" />
-                </div>
-              </q-card-section>
-            </q-card>
-
-            <q-card
-              v-if="importantDates.length"
-              flat
-              bordered
-              square
-              class="q-pa-sm"
-              :class="{ 'q-pa-md': $q.screen.gt.sm }"
-            >
-              <q-card-section>
-                <fpl-subtitle>Important dates</fpl-subtitle>
-                <ul class="q-ma-none">
-                  <li v-for="(date, idx) in importantDates" :key="idx">
-                    <span :class="{ 'text-strike': date.is_past }">{{ date.formatted }}: {{ date.label }}</span>
-                  </li>
-                </ul>
-              </q-card-section>
-            </q-card>
-
-            <div v-if="mainCommittees.length && $q.screen.gt.sm">
-              <div v-for="(committee, idx) in mainCommittees" :key="idx" class="q-mt-xl">
-                <h4 class="fpl__text-subtitle3">{{ committee.name }}</h4>
-                <q-list>
-                  <q-item v-for="(member, idx) in committee.members" :key="idx">
-                    <q-item-section avatar>
-                      <q-icon :name="iconPerson" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{ member.first_name }} {{ member.last_name }}</q-item-label>
-                      <q-item-label v-if="member.affiliation" class="text-grey-8 text-body2">{{
-                        member.affiliation
-                      }}</q-item-label>
-                    </q-item-section>
-                    <q-item-section v-if="member.email" side>
-                      <a :href="`mailto:${member.email}`"><q-icon :name="iconEmail" /></a>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </div>
-            </div>
+            <venue-block v-if="$q.screen.gt.sm" :session="session" />
+            <important-dates-block :dates="importantDates" />
+            <committees-block v-if="mainCommittees.length && $q.screen.gt.sm" :committees="mainCommittees" />
           </div>
 
-          <div class="col-12 col-md-6">
-            <!-- Location info for mobile/smaller screens -->
-            <div v-if="session.room && getVenueAndRoomInfo && !$q.screen.gt.sm" class="q-mb-md">
-              <div v-if="getVenueAndRoomInfo.venue">
-                <div class="text-body1 text-weight-medium">Venue: {{ getVenueAndRoomInfo.venue.name }}</div>
-                <div class="text-h6 text-weight-bold">Location: {{ getVenueAndRoomInfo.room.name }}</div>
-              </div>
-              <div v-else class="text-h6 text-weight-bold">{{ getVenueAndRoomInfo.room.name }}</div>
-              <div v-if="getVenueAndRoomInfo.venueDescription" class="text-body2 q-mt-sm">
-                <marked-div :text="getVenueAndRoomInfo.venueDescription" />
-              </div>
-            </div>
-
+          <div class="col-12 col-md">
+            <venue-block v-if="!$q.screen.gt.sm" :session="session" variant="compact" class="q-mb-md" />
             <marked-div :text="session.description" />
+            <div v-if="sessionProgramContent && sessionProgramContent.trim()">
+              <program-marked-div :text="sessionProgramContent" hide-favorite-btn />
+            </div>
           </div>
         </div>
       </div>
 
       <!-- Pattern A/B: keynote session — show remaining program text (session chair
            etc.) plus the keynote content directly, no nested "More info" dialog -->
-      <div v-else-if="keynoteInline" class="q-px-lg q-pb-xl">
+      <div v-else-if="keynoteInline" class="q-px-lg q-pt-md q-pb-xl">
         <program-marked-div v-if="programKeynoteText" :text="programKeynoteText" hide-favorite-btn class="q-mb-lg" />
-        <div v-if="keynoteInline.speaker" class="q-mb-md">
-          <div class="text-subtitle2 text-grey-7 q-mb-sm">Speaker</div>
-          <div class="row items-start q-col-gutter-lg q-mb-lg">
-            <div class="col-shrink">
-              <avatar-display :file="getKeynoteAvatar(keynoteInline)" size="128px" :alt-text="keynoteInline.speaker" />
-            </div>
-            <div class="col">
-              <p class="q-mb-none text-wrap-balance">
-                <strong>{{ keynoteInline.speaker }}</strong>
-                <span v-if="keynoteInline.extra_data?.speaker_affiliation" class="text-grey-8">
-                  <br />{{ keynoteInline.extra_data.speaker_affiliation }}
-                </span>
-              </p>
-            </div>
-            <div v-if="keynoteInline.extra_data?.speaker_website" class="col-auto">
-              <fpl-btn
-                :href="keynoteInline.extra_data.speaker_website"
-                target="_blank"
-                :icon="iconOpenInNew"
-                label="Visit website"
-                size="md"
-              />
-            </div>
-          </div>
-        </div>
+        <speaker-block :keynote="keynoteInline" />
         <div v-if="keynoteInline.abstract" class="q-mb-lg">
           <div class="text-subtitle2 text-grey-7 q-mb-xs">Abstract</div>
           <marked-div :text="keynoteInline.abstract" />
@@ -151,48 +45,12 @@
       </div>
 
       <!-- Regular sessions: tabbed view -->
-      <q-tab-panels v-else v-model="tab" class="q-px-sm q-mb-xl">
+      <q-tab-panels v-else v-model="tab" class="q-px-sm">
         <q-tab-panel name="info">
-          <div class="row reverse justify-between q-col-gutter-xl">
+          <div class="row reverse justify-between q-col-gutter-xl q-pt-none">
             <div class="col-12 col-md-5">
-              <q-card
-                v-if="importantDates.length"
-                flat
-                bordered
-                square
-                class="q-pa-sm"
-                :class="{ 'q-pa-md': $q.screen.gt.sm }"
-              >
-                <q-card-section>
-                  <fpl-subtitle>Important dates</fpl-subtitle>
-                  <ul class="q-ma-none">
-                    <li v-for="(date, idx) in importantDates" :key="idx">
-                      <span :class="{ 'text-strike': date.is_past }">{{ date.formatted }}: {{ date.label }}</span>
-                    </li>
-                  </ul>
-                </q-card-section>
-              </q-card>
-              <div v-if="mainCommittees.length && $q.screen.gt.sm">
-                <div v-for="(committee, idx) in mainCommittees" :key="idx" class="q-mt-xl">
-                  <h4 class="fpl__text-subtitle3">{{ committee.name }}</h4>
-                  <q-list>
-                    <q-item v-for="(member, idx) in committee.members" :key="idx">
-                      <q-item-section avatar>
-                        <q-icon :name="iconPerson" />
-                      </q-item-section>
-                      <q-item-section>
-                        <q-item-label>{{ member.first_name }} {{ member.last_name }}</q-item-label>
-                        <q-item-label v-if="member.affiliation" class="text-grey-8 text-body2">{{
-                          member.affiliation
-                        }}</q-item-label>
-                      </q-item-section>
-                      <q-item-section v-if="member.email" side>
-                        <a :href="`mailto:${member.email}`"><q-icon :name="iconEmail" /></a>
-                      </q-item-section>
-                    </q-item>
-                  </q-list>
-                </div>
-              </div>
+              <important-dates-block :dates="importantDates" />
+              <committees-block v-if="mainCommittees.length && $q.screen.gt.sm" :committees="mainCommittees" />
             </div>
             <div class="col-12 col-md-6">
               <marked-div :text="session.description" />
@@ -200,67 +58,24 @@
           </div>
         </q-tab-panel>
         <q-tab-panel name="program">
-          <div v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-mb-lg">
-            <program-marked-div :text="sessionProgramContent" hide-favorite-btn />
-          </div>
-          <div v-if="hasSubsessions">
-            <h5 v-if="sessionProgramContent && sessionProgramContent.trim()" class="q-mt-xl q-mb-md">Time slots</h5>
-            <div v-for="(subsession, index) in session.subsessions" :key="subsession.id">
-              <q-separator v-if="index > 0" class="q-mt-lg q-mb-md" />
-              <favorite-btn
-                type="subsession"
-                :id="subsession.id"
-                :hide-label="!$q.screen.gt.sm"
-                class="q-mt-sm float-right"
-              />
-              <h4 class="fpl__text-subtitle3 q-mb-none">
-                {{ getSubsessionDisplayTitle(subsession, index, session.code) }}
-                <q-chip v-if="subsession.start_at" size="md" color="grey-3" class="q-ml-sm">
-                  {{ formatProgramTime(subsession.start_at) }} - {{ formatProgramTime(subsession.end_at) }}
-                </q-chip>
-              </h4>
-              <program-marked-div
-                v-if="subsessionProgramContent.get(subsession.id)"
-                :text="subsessionProgramContent.get(subsession.id) ?? ''"
-                hide-favorite-btn
-                class="q-py-md"
-              />
-            </div>
-          </div>
+          <program-marked-div
+            v-if="sessionProgramContent && sessionProgramContent.trim()"
+            :text="sessionProgramContent"
+            hide-favorite-btn
+          />
+          <subsessions-block
+            :session="session"
+            :subsession-program-content="subsessionProgramContent"
+            :show-title="!!(sessionProgramContent && sessionProgramContent.trim())"
+          />
         </q-tab-panel>
         <q-tab-panel name="committees">
           <div class="row justify-between q-col-gutter-xl">
             <div v-if="mainCommittees.length" class="col-12 col-md-5">
-              <div v-for="(committee, idx) in mainCommittees" :key="idx" class="q-mb-xl">
-                <h4 class="fpl__text-subtitle3">{{ committee.name }}</h4>
-                <q-list>
-                  <q-item v-for="(member, idx) in committee.members" :key="idx">
-                    <q-item-section avatar>
-                      <q-icon :name="iconPerson" />
-                    </q-item-section>
-                    <q-item-section>
-                      <q-item-label>{{ member.first_name }} {{ member.last_name }}</q-item-label>
-                      <q-item-label v-if="member.affiliation" class="text-grey-8 text-body2">{{
-                        member.affiliation
-                      }}</q-item-label>
-                    </q-item-section>
-                    <q-item-section v-if="member.email" side>
-                      <a :href="`mailto:${member.email}`"><q-icon :name="iconEmail" /></a>
-                    </q-item-section>
-                  </q-item>
-                </q-list>
-              </div>
+              <committees-block :committees="mainCommittees" spacing="mb" />
             </div>
             <div v-if="secondaryCommittees.length" class="col-12 col-md-6">
-              <div v-for="(committee, idx) in secondaryCommittees" :key="idx" class="q-mb-xl">
-                <h4 class="fpl__text-subtitle3">{{ committee.name }}</h4>
-                <ul>
-                  <li v-for="(member, idx) in committee.members" :key="idx">
-                    {{ member.first_name }} {{ member.last_name
-                    }}<span v-if="member.affiliation" class="text-grey-8 text-body2">, {{ member.affiliation }}</span>
-                  </li>
-                </ul>
-              </div>
+              <committees-block :committees="secondaryCommittees" variant="list" spacing="mb" />
             </div>
           </div>
         </q-tab-panel>
@@ -278,24 +93,18 @@ import { useEventStore } from '@evan/stores/event';
 import { formatImportantDate, passedImportantDate } from '@evan/utils/dates';
 import { logger } from '@evan/utils/logger';
 
-import {
-  getSessionDisplayTitle,
-  getSubsessionDisplayTitle,
-  formatProgramDate,
-  formatProgramTime,
-  getRoomName,
-  isBreakTrackName,
-} from '@/utils/program';
+import { getSessionDisplayTitle, isBreakTrackName } from '@/utils/program';
 
 import MarkedDiv from '@evan/components/MarkedDiv.vue';
 import FplDialogContent from '@/components/FplDialogContent.vue';
-import AvatarDisplay from '@/components/AvatarDisplay.vue';
-import FavoriteBtn from '@/components/program/FavoriteBtn.vue';
 import ProgramMarkedDiv from '@/components/program/ProgramMarkedDiv.vue';
 
-import { getKeynoteAvatar } from '@/utils/program';
-
-import { iconEmail, iconOpenInNew, iconPerson } from '@/icons';
+import CommitteesBlock from '@/components/program/session-content/blocks/CommitteesBlock.vue';
+import SessionHeaderBlock from '@/components/program/session-content/blocks/SessionHeaderBlock.vue';
+import VenueBlock from '@/components/program/session-content/blocks/VenueBlock.vue';
+import ImportantDatesBlock from '@/components/program/session-content/blocks/ImportantDatesBlock.vue';
+import SpeakerBlock from '@/components/program/session-content/blocks/SpeakerBlock.vue';
+import SubsessionsBlock from '@/components/program/session-content/blocks/SubsessionsBlock.vue';
 
 const $q = useQuasar();
 const eventStore = useEventStore();
@@ -389,10 +198,7 @@ const linkedKeynote = computed(() => {
 
 const keynoteInline = computed(() => linkedKeynote.value ?? programKeynote.value);
 
-const hasSubsessions = computed(() => {
-  return props.session.subsessions && props.session.subsessions.length > 0;
-});
-
+// '[superseded]' sentinel used in Evan admin
 // '[superseded]' is a sentinel used in Evan admin to indicate the session-level
 // content is intentionally empty because the keynote object is the authoritative
 // source (Pattern B: standalone keynote session). Treat it as empty.
@@ -418,24 +224,6 @@ const titles = computed<[string, string]>(() => {
   return isKeynoteTrack
     ? [props.session.title, 'Keynote']
     : [getSessionDisplayTitle(props.session, tracks), props.session.code || props.session.title];
-});
-
-// Helper functions for venue and room information
-const getVenueAndRoomInfo = computed(() => {
-  if (!props.session.room || !eventStore.event?.venues) return null;
-
-  // Find the room in the flattened rooms array from eventStore
-  const room = eventStore.rooms.find((r) => r.id === props.session.room);
-  if (!room) return null;
-
-  // Find the venue that contains this room
-  const venue = eventStore.event.venues.find((v) => v.rooms.some((vr) => vr.id === props.session.room));
-
-  return {
-    room,
-    venue,
-    venueDescription: venue?.presentation && venue.presentation.trim() ? venue.presentation : null,
-  };
 });
 
 const mainCommittees = computed<Committee[]>(
