@@ -2,12 +2,20 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-4 flex column q-pr-lg" v-show="$q.screen.gt.xs">
-          <fpl-separator label="Accepted Papers" />
+        <div class="col-12 col-md-4 flex q-pr-lg aside-sticky" v-show="$q.screen.gt.xs">
+          <fpl-separator label="Accepted Papers" class="full-width" />
           <h6>
             All accepted Papers at <span class="text-no-wrap">{{ eventStore.event?.name }}</span
             >, listed alphabetically.
           </h6>
+          <fpl-btn
+            v-if="!$q.screen.lt.md"
+            :icon="iconBook"
+            label="Proceedings"
+            type="router-link"
+            href="https://evan.ugent.be/media/private/20/34/fpl2026-proceedings_rRzP0Umj.zip"
+            target="_blank"
+          />
         </div>
         <div class="col-12 col-md-8">
           <fpl-search-bar
@@ -58,6 +66,15 @@
               </li>
             </ul>
           </template>
+          <fpl-btn
+            v-if="$q.screen.lt.md"
+            :icon="iconBook"
+            label="Download proceedings"
+            type="router-link"
+            href="https://evan.ugent.be/media/private/20/34/fpl2026-proceedings_rRzP0Umj.zip"
+            target="_blank"
+            class="full-width q-mt-xl"
+          />
         </div>
       </div>
     </div>
@@ -77,7 +94,7 @@ import FplSeparator from '@/components/FplSeparator.vue';
 import EmptyState from '@/components/program/EmptyState.vue';
 import PaperDetailsDialog from '@/components/program/PaperDetailsDialog.vue';
 
-import { iconAddCircle } from '@/icons';
+import { iconAddCircle, iconBook } from '@/icons';
 
 const eventStore = useEventStore();
 
@@ -148,3 +165,11 @@ const getSessionDisplay = (paper: EvanPaper): string => {
   return getSessionDisplayTitle(session, tracks);
 };
 </script>
+
+<style scoped lang="scss">
+.aside-sticky {
+  position: sticky;
+  top: 3em;
+  align-self: flex-start;
+}
+</style>

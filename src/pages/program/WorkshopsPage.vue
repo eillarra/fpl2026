@@ -2,7 +2,7 @@
   <div class="q-mb-xl q-pb-xl">
     <div class="container">
       <div class="row q-col-gutter-y-lg q-col-gutter-x-md justify-between">
-        <div class="col-12 col-md-4 flex column q-pr-lg" v-show="$q.screen.gt.xs">
+        <div class="col-12 col-md-4 flex column q-pr-lg aside-sticky" v-show="$q.screen.gt.xs">
           <fpl-separator label="Workshops & Tutorials" />
           <h6>
             All workshops and tutorials at <span class="text-no-wrap">{{ eventStore.event?.name }}</span> (Thu-Fri).
@@ -195,3 +195,11 @@ const openSessionDetails = (session: EvanSession) => {
   showSessionDialog.value = true;
 };
 </script>
+
+<style scoped lang="scss">
+.aside-sticky {
+  position: sticky;
+  top: 3em;
+  align-self: flex-start;
+}
+</style>

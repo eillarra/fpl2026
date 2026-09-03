@@ -9,7 +9,7 @@
         <div class="col-6 col-md-auto">
           <fpl-btn
             :icon="iconVenue"
-            label="More information"
+            label="Venue"
             type="router-link"
             :to="{ name: 'venue' }"
             class="full-width q-mb-md"
