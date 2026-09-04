@@ -8,6 +8,16 @@
       <div class="row q-col-gutter-md q-mb-none">
         <div class="col-6 col-md-auto">
           <fpl-btn
+            :icon="iconBook"
+            label="Program brochure"
+            type="router-link"
+            href="https://evan.ugent.be/media/public/20/34/fpl2026-brochure-final_9brWpLRB.pdf"
+            target="_blank"
+            class="full-width q-mb-md"
+          />
+        </div>
+        <div class="col-6 col-md-auto">
+          <fpl-btn
             :icon="iconVenue"
             label="Venue"
             type="router-link"
@@ -95,7 +105,7 @@ import AvatarDisplay from '@/components/AvatarDisplay.vue';
 import ImportantDatesList from '@/components/ImportantDatesList.vue';
 import KeynoteDetailsDialog from '@/components/program/KeynoteDetailsDialog.vue';
 
-import { iconRegistration, iconVenue } from '@/icons';
+import { iconBook, iconRegistration, iconVenue } from '@/icons';
 
 const eventStore = useEventStore();
 
