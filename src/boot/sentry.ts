@@ -15,10 +15,10 @@ const PRELOAD_ERRORS = [
 ];
 
 export default defineBoot(({ app, router }) => {
-  const isProduction = !!process.env.PROD;
+  const isProduction = !!import.meta.env.QUASAR_PROD;
 
   if (isProduction) {
-    Sentry.setTag('app.mode', process.env.MODE);
+    Sentry.setTag('app.mode', import.meta.env.QUASAR_MODE);
     Sentry.init({
       app,
       dsn: 'https://254c6c119e85db8aee5096d6b786a76d@o4507214700019712.ingest.de.sentry.io/4510390598565968',
